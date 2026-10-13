@@ -1,10 +1,7 @@
-// ==========================================
-// STATE MANAGEMENT & QUIZ NAVIGATION
-// ==========================================
 let currentPhase = 1;
 let currentQuestion = 1;
 
-// Menyimpan bobot keyakinan / Certainty Factor (CF) untuk setiap Season
+// Menyimpan bobot keyakinan atau Certainty Factor (CF) untuk setiap Season
 let seasonScores = {
     spring: 0,
     summer: 0,
@@ -54,6 +51,15 @@ function autoNextP3(radioElement) {
         // Pertanyaan terakhir dijawab -> Hitung Forward Chaining & CF lalu tampilkan hasil
         calculateColorAnalysis();
     }
+}
+
+function nextColorStep() {
+    // Sembunyikan intro
+    document.getElementById('section-color-intro').classList.add('hidden');
+    
+    // Tampilkan progress bar dan fase 1 kuis
+    document.getElementById('route-progress-bar').classList.remove('hidden');
+    document.getElementById('section-color-phase1').classList.remove('hidden');
 }
 
 // ==========================================
