@@ -1,3 +1,38 @@
+function startQuiz() {
+    document.getElementById('screen-intro').classList.add('hidden');
+    document.getElementById('screen-q1').classList.remove('hidden');
+    document.getElementById('header-phase-title').innerText = "Natural Signals";
+    document.getElementById('top-progress').style.width = "30%";
+}
+
+function autoNext(currentScreenId, nextScreenId) {
+    document.getElementById(currentScreenId).classList.add('hidden');
+    document.getElementById(nextScreenId).classList.remove('hidden');
+    document.getElementById('top-progress').style.width = "60%";
+}
+
+function selectTextOpt(element, currentScreenId, nextScreenId) {
+    // Beri efek terpilih
+    const allOpts = element.parentElement.querySelectorAll('.text-opt-card');
+    allOpts.forEach(opt => opt.classList.remove('selected'));
+    element.classList.add('selected');
+
+    // Beri sedikit jeda animasi lalu pindah layar
+    setTimeout(() => {
+        document.getElementById(currentScreenId).classList.add('hidden');
+        document.getElementById(nextScreenId).classList.remove('hidden');
+        document.getElementById('top-progress').style.width = "80%";
+    }, 250);
+}
+
+function goToPhase2() {
+    alert("Masuk ke Fase 2!");
+    // Kamu bisa arahkan ke pertanyaan Phase 2 selanjutnya di sini
+}
+
+function prevStep() {
+    window.location.reload();
+}
 let currentPhase = 1;
 let currentQuestion = 1;
 

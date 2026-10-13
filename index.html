@@ -1,56 +1,43 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraColor Studio | Seasonal Color Analysis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Seasonal Color Analysis Quiz</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Ambient Glow Background Blobs -->
-    <div class="ambient-blob blob-1"></div>
-    <div class="ambient-blob blob-2"></div>
-    <div class="ambient-blob blob-3"></div>
-
-    <div class="container fade-in">
+    <div class="quiz-app-container">
         
-        <!-- BRAND HEADER -->
-        <div class="brand-header">
-            <span class="badge-pill">✨ AI Expert System</span>
-            <h1>AuraColor Studio</h1>
-            <p>Temukan palet warna musiman (Seasonal Color) eksklusif yang memancarkan aura naturalmu.</p>
+        <header class="app-header">
+            <button class="back-btn" onclick="prevStep()">‹</button>
+            <div class="header-title" id="header-phase-title">Analysis</div>
+        </header>
+
+        <div class="top-progress-bar">
+            <div class="top-progress-fill" id="top-progress" style="width: 15%;"></div>
         </div>
 
-    <!-- ================= COLOR ANALYSIS MODULE ================= -->
+        <div id="screen-intro" class="quiz-screen fade-in">
+            <div class="hero-image-banner">
+                <img src="images/intro-banner.jpg" alt="Color Analysis Preview" class="hero-img-trio">
+            </div>
 
-    <!-- SECTION C1: INTRO COLOR ANALYSIS -->
-    <div id="section-color-intro" class="card fade-in">
-        <h2>Your Color Analysis Will Reveal: 🌈</h2>
-        <ul class="reveal-list">
-            <li>🌸 Seasonal Palette (Spring, Summer, Autumn, Winter)</li>
-            <li>👗 Best Clothing & Outfit Colors</li>
-            <li>✨ Best Neutrals and Accents</li>
-            <li>💄 Makeup Color Guidance & Shades</li>
-            <li>💇‍♀️ Hair Color Compatibility</li>
-            <li>🕶️ Accessory and Sunglasses Shades</li>
-        </ul>
-        <button class="btn-primary" onclick="nextColorStep()">Continue 🚀</button>
-    </div>
+            <h1 class="main-heading">Your color analysis will reveal:</h1>
 
-    <!-- ROUTE PROGRESS BAR (UNTUK COLOR ANALYSIS) -->
-    <div id="route-progress-bar" class="route-progress hidden">
-        <div class="step-node active" id="node-1">1</div>
-        <div class="line" id="line-1"></div>
-        <div class="step-node" id="node-2">2</div>
-        <div class="line" id="line-2"></div>
-        <div class="step-node" id="node-3">3</div>
-    </div>
+            <ul class="check-list">
+                <li><span class="check-icon">✓</span> Your seasonal palette direction</li>
+                <li><span class="check-icon">✓</span> Best clothing colors</li>
+                <li><span class="check-icon">✓</span> Best neutrals and accents</li>
+                <li><span class="check-icon">✓</span> Makeup color guidance</li>
+                <li><span class="check-icon">✓</span> Hair color compatibility</li>
+            </ul>
 
-    <!-- SECTION C2: PHASE 1 - NATURAL SIGNALS -->
-    <div id="section-color-phase1" class="card hidden fade-in">
-        <div class="phase-badge">Phase 1: Natural Signals 🧬</div>
+            <button class="btn-continue" onclick="startQuiz()">Continue</button>
+        </div>
         
         <!-- Q1: Eye Color -->
         <div class="q-block" data-q="c1">
