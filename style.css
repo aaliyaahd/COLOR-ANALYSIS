@@ -1,17 +1,37 @@
-/* Tema Estetik Modern & Minimalis */
+/* ==========================================
+   PASTEL CUTE PALETTE VARIABLES
+   ========================================== */
 :root {
-    --primary-color: #E5989B;     /* Soft Rose / Blush Pink */
-    --primary-hover: #B5838D;     /* Muted Mauve */
-    --bg-color: #F8EDEB;          /* Very Light Nude Pink */
-    --card-bg: #FFFFFF;
-    --text-color: #22223B;        /* Dark Navy/Charcoal untuk teks elegan */
-    --border-color: #FFCDD2;
+    --teal-main: #2dd4bf;         /* Teal Pastel */
+    --teal-dark: #14b8a6;
+    --teal-soft: #ccfbf1;
+
+    --soft-blue: #93c5fd;         /* Soft Blue */
+    --soft-blue-dark: #60a5fa;
+    --soft-blue-bg: #eff6ff;
+
+    --soft-pink: #f472b6;         /* Soft Pink */
+    --soft-pink-dark: #ec4899;
+    --soft-pink-bg: #fdf2f8;
+
+    --butter-yellow: #fef08a;     /* Butter Yellow */
+    --butter-yellow-dark: #fde047;
+    --butter-yellow-bg: #fefce8;
+
+    --bg-gradient: linear-gradient(135deg, #fdf2f8 0%, #eff6ff 50%, #fefce8 100%);
+    --card-bg: #ffffff;
+    --text-main: #334155;         /* Soft Charcoal Text */
+    --text-muted: #64748b;
+    --border-color: #f1f5f9;
 }
 
+/* ==========================================
+   GLOBAL STYLES & LAYOUT
+   ========================================== */
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background: var(--bg-gradient);
+    color: var(--text-main);
     margin: 0;
     padding: 20px;
     display: flex;
@@ -22,153 +42,267 @@ body {
 
 .container {
     background-color: var(--card-bg);
-    padding: 40px 35px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(181, 131, 141, 0.15);
-    max-width: 550px;
+    padding: 35px 30px;
+    border-radius: 28px;
+    box-shadow: 0 16px 40px rgba(147, 197, 253, 0.25);
+    max-width: 650px;
     width: 100%;
-    text-align: center;
     position: relative;
+    border: 2px solid #ffffff;
+}
+
+/* BRAND HEADER */
+.brand-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+.brand-header h1 {
+    background: linear-gradient(135deg, var(--soft-pink-dark), var(--teal-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+.brand-header p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
 }
 
 h2 {
-    color: var(--primary-hover);
-    margin-bottom: 10px;
-    font-weight: 600;
+    color: var(--text-main);
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
 }
 
-p.subtitle {
+p {
     font-size: 14px;
-    color: #6D6875;
-    margin-bottom: 30px;
+    color: var(--text-muted);
 }
 
 .hidden {
     display: none !important;
 }
 
-/* Animasi transisi antar halaman */
 .fade-in {
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.4s ease-in-out;
 }
+
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Tombol */
-.btn-group {
+/* ROUTE PROGRESS BAR */
+.route-progress {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
-}
-.row-btns {
-    flex-direction: row;
     justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 10px;
 }
-.row-btns button {
-    flex: 1;
+.step-node {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--butter-yellow-bg);
+    border: 2px solid var(--butter-yellow);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+.step-node.active {
+    background: var(--teal-main);
+    border-color: var(--teal-dark);
+    color: white;
+    box-shadow: 0 4px 12px rgba(45, 212, 191, 0.4);
+}
+.line {
+    width: 45px;
+    height: 4px;
+    border-radius: 2px;
+    background: #e2e8f0;
+    transition: 0.3s;
+}
+.line.active {
+    background: var(--teal-main);
 }
 
-button {
-    padding: 14px 20px;
-    border: 2px solid var(--primary-color);
-    background-color: white;
-    color: var(--primary-hover);
-    font-family: 'Poppins', sans-serif;
-    font-size: 15px;
+/* ==========================================
+   OPTIONS & QUIZ CARDS
+   ========================================== */
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.image-options {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.opt-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--soft-pink-bg);
+    border: 2px solid #fce7f3;
+    padding: 12px 16px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.25s ease;
+}
+
+.opt-card:hover {
+    background: #ffffff;
+    border-color: var(--soft-pink);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(244, 114, 182, 0.2);
+}
+
+.opt-card input[type="radio"] {
+    accent-color: var(--soft-pink-dark);
+}
+
+/* KARTU OPSI BERGAMBAR (Eye, Skin, Shirt, Mood, Hair, Neutral) */
+.eye-card, .skin-card, .shirt-card, .mood-card, .glow-card, .hair-card, .neutral-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 12px 0;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #ffffff;
+    border: 2px solid #f1f5f9;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.eye-card:hover, .skin-card:hover, .shirt-card:hover, 
+.mood-card:hover, .glow-card:hover, .hair-card:hover, .neutral-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--teal-main);
+    box-shadow: 0 10px 22px rgba(45, 212, 191, 0.25);
+}
+
+.eye-card input[type="radio"], .skin-card input[type="radio"], 
+.shirt-card input[type="radio"], .mood-card input[type="radio"], 
+.glow-card input[type="radio"], .hair-card input[type="radio"], 
+.neutral-card input[type="radio"] {
+    display: none;
+}
+
+.eye-img, .skin-img, .shirt-img, .mood-img, .glow-img, .hair-img, .neutral-img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    margin-bottom: 8px;
+}
+
+.eye-card span, .skin-card span, .shirt-card span, 
+.mood-card span, .glow-card span, .hair-card span, .neutral-card span {
+    font-size: 13px;
     font-weight: 600;
-    border-radius: 12px;
+    color: var(--text-main);
+    padding: 0 10px;
+    text-align: center;
+}
+
+/* OPSI "I'M NOT SURE" POLOS */
+.not-sure-card {
+    background: var(--butter-yellow-bg);
+    border: 2px dashed var(--butter-yellow-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 120px;
+}
+
+.not-sure-card:hover {
+    background: #ffffff;
+    border-style: solid;
+    border-color: var(--soft-blue-dark);
+}
+
+.not-sure-box span {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--teal-main), var(--soft-blue));
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(45, 212, 191, 0.35);
+    transition: all 0.3s ease;
+    margin-top: 15px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(45, 212, 191, 0.45);
+    background: linear-gradient(135deg, var(--teal-dark), var(--soft-blue-dark));
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--soft-pink);
+    color: var(--soft-pink-dark);
+    padding: 12px;
+    border-radius: 16px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 }
-button:hover, .btn-primary {
-    background-color: var(--primary-color);
-    color: white;
-    box-shadow: 0 4px 15px rgba(229, 152, 155, 0.4);
-}
-.btn-primary:hover {
-    background-color: var(--primary-hover);
-    border-color: var(--primary-hover);
-}
-.btn-outline {
-    background-color: transparent;
-    color: var(--primary-hover);
-}
-.btn-secondary {
-    border-color: #E0E0E0;
-    color: #757575;
-}
-.btn-secondary:hover {
-    background-color: #F5F5F5;
-    color: #424242;
-    border-color: #BDBDBD;
-    box-shadow: none;
+
+.btn-outline:hover {
+    background: var(--soft-pink-bg);
+    border-color: var(--soft-pink-dark);
 }
 
-/* Pertanyaan Lab */
-.question-block {
-    text-align: left;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 1px dashed var(--border-color);
-}
-.question-block p {
-    font-size: 15px;
+/* BADGES & UTILITIES */
+.phase-badge {
+    background: var(--soft-blue-bg);
+    color: var(--soft-blue-dark);
+    border: 1px solid var(--soft-blue);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
     margin-bottom: 12px;
-    color: var(--primary-hover);
-}
-.question-block label {
-    display: block;
-    margin: 8px 0;
-    cursor: pointer;
-    background: #FAFAFA;
-    padding: 12px 15px;
-    border-radius: 10px;
-    border: 1px solid #EEEEEE;
-    font-size: 14px;
-    transition: all 0.2s ease;
-}
-.question-block label:hover {
-    background: #FFF5F5;
-    border-color: var(--primary-color);
-}
-input[type="radio"] {
-    accent-color: var(--primary-color);
-    margin-right: 10px;
 }
 
-/* Kotak Hasil & Penutup */
-.result-box, .closing-box {
-    background-color: #FFF5F5;
-    padding: 25px;
-    border-radius: 15px;
-    border: 1px solid var(--border-color);
-    margin-top: 20px;
-}
-.closing-box {
-    text-align: center;
-    background-color: transparent;
-    border: none;
-}
-.closing-box h2 {
-    font-size: 28px;
-    color: var(--primary-hover);
-}
-.highlight-text {
-    font-size: 24px;
-    color: var(--primary-color);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin: 10px 0;
-}
-.custom-list {
-    text-align: left;
-    padding-left: 15px;
-    font-size: 14px;
-    line-height: 1.6;
-}
-.custom-list li {
-    margin-bottom: 10px;
+.text-center { text-align: center; }
+.mt-15 { margin-top: 15px; }
+.mt-20 { margin-top: 20px; }
+.mt-30 { margin-top: 30px; }
+
+/* ==========================================
+   RESULT CARD STYLING
+   ========================================== */
+#section-color-result {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 10px;
 }

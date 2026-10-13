@@ -1,140 +1,168 @@
-let userGender = "";
-let userNeed = "";
-let finalSkinType = "";
+// ==========================================
+// STATE MANAGEMENT & QUIZ NAVIGATION
+// ==========================================
+let currentPhase = 1;
+let currentQuestion = 1;
 
-// Knowledge Base
-const productRecommendations = {
-    skincare: {
-        kering: [
-            "Cleanser: Gunakan Gentle Cleanser (krim/lotion) yang tidak berbusa banyak dan hindari scrub kasar.",
-            "Toner: Wajib pakai Hydrating Toner (Glycerin, Hyaluronic Acid) hingga 2-3 layer.",
-            "Serum: Pilih serum melembapkan atau anti-aging yang kaya akan Ceramide.",
-            "Moisturizer: Gunakan pelembap bertekstur krim tebal untuk mengunci air di kulit.",
-            "Sunscreen: Pilih sunscreen dengan hasil akhir dewy/glowing."
-        ],
-        kombinasi: [
-            "Cleanser: Gunakan pembersih wajah gel yang gentle (pH balance).",
-            "Toner: Aplikasikan Hydrating Toner di pipi, dan BHA Exfoliating Toner tipis di area T-Zone.",
-            "Serum: Niacinamide sangat bagus untuk menyeimbangkan produksi sebum tanpa mengeringkan.",
-            "Moisturizer: Gunakan pelembap bertekstur gel-lotion yang ringan namun tetap menghidrasi.",
-            "Sunscreen: Pilih sunscreen bertekstur lotion atau cair (water-based)."
-        ],
-        berminyak: [
-            "Cleanser: Gunakan facial wash gel dengan kandungan Salicylic Acid/Tea Tree.",
-            "Toner: Rutin gunakan Exfoliating Toner (BHA/AHA) 2-3 kali seminggu untuk membersihkan pori.",
-            "Serum: Hindari serum berbahan dasar minyak (oil-based). Gunakan serum pengontrol sebum.",
-            "Moisturizer: Wajib pakai pelembap! Pilih tekstur watery-gel ringan (Oil-free/Non-comedogenic).",
-            "Sunscreen: Gunakan sunscreen dengan hasil akhir matte agar tidak kusam di siang hari."
-        ]
-    },
-    makeup: {
-        kering: [
-            "Primer: Gunakan Hydrating Primer berbahan dasar air/silikon ringan agar makeup tidak crack.",
-            "Complexion: Pilih Foundation/Cushion dengan hasil akhir Dewy atau Radiant.",
-            "Blush/Contour: Gunakan tekstur Cream/Liquid (cair) agar menyatu dengan kulit dan tampak natural.",
-            "Setting: Semprotkan Hydrating Setting Spray. Hindari pemakaian bedak tabur tebal."
-        ],
-        kombinasi: [
-            "Primer: Gunakan Pore-blurring primer HANYA di area T-Zone (hidung, dahi), dan Hydrating primer di pipi.",
-            "Complexion: Pilih Foundation dengan hasil akhir Satin atau Semi-matte.",
-            "Setting: Lakukan teknik 'baking' dengan bedak tabur tipis hanya pada area yang mudah berminyak."
-        ],
-        berminyak: [
-            "Primer: Wajib gunakan Mattifying Primer atau Pore-blurring primer di seluruh wajah.",
-            "Complexion: Pilih Foundation/Cushion dengan formula Matte dan Full Oil-Control.",
-            "Blush/Contour: Sangat disarankan menggunakan tekstur Powder (Bedak) agar tidak mudah bergeser.",
-            "Setting: Set seluruh wajah dengan Translucent Setting Powder, lalu kunci dengan Matte Setting Spray."
-        ]
-    }
+// Menyimpan bobot keyakinan / Certainty Factor (CF) untuk setiap Season
+let seasonScores = {
+    spring: 0,
+    summer: 0,
+    autumn: 0,
+    winter: 0
 };
 
-// Fungsi Utility Navigasi
-function hide(id) { document.getElementById(id).classList.add('hidden'); }
-function show(id) { document.getElementById(id).classList.remove('hidden'); }
+// Fungsi navigasi Phase 1 (Natural Signals)
+function autoNext(radioElement) {
+    const currentBlock = radioElement.closest('.q-block');
+    const nextBlock = currentBlock.nextElementSibling;
 
-// Alur 1: Gender
-function setGender(gender) {
-    userGender = gender;
-    hide('section-gender');
-
-    if (gender === 'laki-laki') {
-        userNeed = 'skincare'; // Otomatis ke skincare
-        show('section-assessment');
+    if (nextBlock && nextBlock.classList.contains('q-block')) {
+        currentBlock.classList.add('hidden');
+        nextBlock.classList.remove('hidden');
     } else {
-        show('section-need'); // Perempuan diarahkan ke pilihan
+        // Jika habis, lanjut ke Phase 2 (Palette Direction)
+        document.getElementById('section-color-phase1').classList.add('hidden');
+        document.getElementById('section-color-phase2').classList.remove('hidden');
     }
 }
 
-// Alur 2: Kebutuhan
-function setNeed(need) {
-    userNeed = need;
-    hide('section-need');
-    show('section-assessment');
+// Fungsi navigasi Phase 2 (Palette Direction)
+function autoNextP2(radioElement) {
+    const currentBlock = radioElement.closest('.q-block-p2');
+    const nextBlock = currentBlock.nextElementSibling;
+
+    if (nextBlock && nextBlock.classList.contains('q-block-p2')) {
+        currentBlock.classList.add('hidden');
+        nextBlock.classList.remove('hidden');
+    } else {
+        // Jika habis, lanjut ke Phase 3 (Color Habits)
+        document.getElementById('section-color-phase2').classList.add('hidden');
+        document.getElementById('section-color-phase3').classList.remove('hidden');
+    }
 }
 
-// Alur 3: Hitung Nilai dari 10 Pertanyaan
-function calculateSkinType() {
-    let totalScore = 0;
-    let answered = 0;
+// Fungsi navigasi Phase 3 (Color Habits) & Proses Hasil Akhir
+function autoNextP3(radioElement) {
+    const currentBlock = radioElement.closest('.q-block-p3');
+    const nextBlock = currentBlock.nextElementSibling;
 
-    // Loop 10 pertanyaan
-    for (let i = 1; i <= 10; i++) {
-        const answer = document.querySelector(`input[name="q${i}"]:checked`);
-        if (answer) {
-            totalScore += parseInt(answer.value);
-            answered++;
+    if (nextBlock && nextBlock.classList.contains('q-block-p3')) {
+        currentBlock.classList.add('hidden');
+        nextBlock.classList.remove('hidden');
+    } else {
+        // Pertanyaan terakhir dijawab -> Hitung Forward Chaining & CF lalu tampilkan hasil
+        calculateColorAnalysis();
+    }
+}
+
+// ==========================================
+// INFERENCE ENGINE: FORWARD CHAINING & CERTAINTY FACTOR
+// ==========================================
+function calculateColorAnalysis() {
+    // Reset skor
+    seasonScores = { spring: 0, summer: 0, autumn: 0, winter: 0 };
+
+    // Ambil semua nilai dari input radio yang dipilih pengguna
+    const allInputs = document.querySelectorAll('input[type="radio"]:checked');
+
+    allInputs.forEach(input => {
+        const value = input.value; // contoh: 'warm', 'cool', 'bright', 'soft', 'deep', 'light'
+        
+        // Aturan Forward Chaining & Pemberian Bobot Certainty Factor (CF)
+        // Pakar menetapkan seberapa besar keyakinan (CF) suatu pilihan terhadap karakteristik season
+        if (value === 'warm') {
+            seasonScores.spring += 0.6;
+            seasonScores.autumn += 0.8;
+        } else if (value === 'cool') {
+            seasonScores.summer += 0.8;
+            seasonScores.winter += 0.6;
+        } else if (value === 'bright' || value === 'high-contrast') {
+            seasonScores.spring += 0.7;
+            seasonScores.winter += 0.9;
+        } else if (value === 'soft' || value === 'muted') {
+            seasonScores.summer += 0.8;
+            seasonScores.autumn += 0.7;
+        } else if (value === 'deep' || value === 'rich') {
+            seasonScores.autumn += 0.9;
+            seasonScores.winter += 0.7;
+        } else if (value === 'light' || value === 'fresh') {
+            seasonScores.spring += 0.8;
+            seasonScores.summer += 0.7;
+        }
+    });
+
+    // Cari season dengan skor tertinggi (Forward Chaining Conclusion)
+    let bestSeason = 'spring';
+    let maxScore = -1;
+
+    for (let season in seasonScores) {
+        if (seasonScores[season] > maxScore) {
+            maxScore = seasonScores[season];
+            bestSeason = season;
         }
     }
 
-    if (answered < 10) {
-        alert("Harap jawab ke-10 pertanyaan agar hasil diagnosis akurat!");
-        return;
-    }
+    // Tampilkan hasil ke halaman web
+    displayResult(bestSeason);
+}
 
-    // Sistem Forward Chaining & CF (Skor 10-30)
-    // Jawaban A=1 (Kering), B=2 (Kombinasi), C=3 (Berminyak)
-    // Total 10-16 = Kering, 17-23 = Kombinasi, 24-30 = Berminyak
+// ==========================================
+// RENDER HASIL ANALISIS KE UI
+// ==========================================
+function displayResult(season) {
+    // Sembunyikan semua fase kuis
+    document.getElementById('section-color-phase3').classList.add('hidden');
     
-    if (totalScore <= 16) {
-        finalSkinType = "kering";
-    } else if (totalScore >= 17 && totalScore <= 23) {
-        finalSkinType = "kombinasi";
-    } else {
-        finalSkinType = "berminyak";
+    // Tampilkan section hasil
+    const resultSection = document.getElementById('section-color-result');
+    resultSection.classList.remove('hidden');
+
+    // Data Deskripsi & Rekomendasi Palet untuk Masing-masing Season
+    const seasonData = {
+        spring: {
+            title: "🌸 True / Warm Spring",
+            desc: "Karakteristikmu didominasi oleh undertone yang hangat (warm) dengan tingkat kecerahan yang segar dan cerah (light/bright). Warna-warna bernuansa ceria dan hangat sangat memancarkan aura glowing-mu!",
+            palette: ["#FF7F50", "#FFD700", "#98FB98", "#40E0D0", "#FF6B6B"]
+        },
+        summer: {
+            title: "🌿 Light / Cool Summer",
+            desc: "Karakteristikmu memiliki undertone dingin (cool) dengan karakteristik warna yang lembut, tenang, dan tidak terlalu kontras (soft/muted). Warna-warna pastel lembut membuat wajahmu tampak sangat elegan.",
+            palette: ["#B0E0E6", "#D8BFD8", "#FFB6C1", "#778899", "#E0EEEE"]
+        },
+        autumn: {
+            title: "🍂 Warm / Deep Autumn",
+            desc: "Karakteristikmu memancarkan kehangatan yang kaya (warm & rich). Warna-warna bumi yang dalam dan hangat (earthy tones) akan membuat penampilanmu terlihat sangat matang, elegan, dan berkelas.",
+            palette: ["#8B4513", "#CD853F", "#556B2F", "#800000", "#D2B48C"]
+        },
+        winter: {
+            title: "❄️ True / Deep Winter",
+            desc: "Karakteristikmu memiliki undertone dingin dengan kontras tinggi (cool & high contrast). Warna-warna tegas, tajam, dan pekat sangat kontras dan cocok dengan pesonamu yang dramatis.",
+            palette: ["#000080", "#800080", "#DC143C", "#2F4F4F", "#000000"]
+        }
+    };
+
+    const currentResult = seasonData[season];
+
+    // Suntikkan data ke dalam elemen hasil di HTML (Pastikan elemen target ada di index.html)
+    let resultContainer = document.getElementById('result-content');
+    if (!resultContainer) {
+        // Jika container khusus belum ada, buat secara dinamis di dalam section result
+        resultContainer = document.createElement('div');
+        resultContainer.id = 'result-content';
+        resultSection.prepend(resultContainer);
     }
 
-    displayDiagnosis();
-}
+    let colorBoxesHTML = currentResult.palette.map(color => 
+        `<div style="width: 40px; height: 40px; background-color: ${color}; border-radius: 50%; display: inline-block; margin: 0 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"></div>`
+    ).join('');
 
-// Alur 4: Tampilkan Diagnosis Saja (Tanya Rekomendasi)
-function displayDiagnosis() {
-    hide('section-assessment');
-    show('section-diagnosis');
-
-    document.getElementById('diagnosis-skin-type').innerText = finalSkinType;
-    document.getElementById('diagnosis-need').innerText = userNeed;
-}
-
-// Alur 5: Jika "Ya", Tampilkan Daftar Produk
-function showRecommendations() {
-    hide('section-diagnosis');
-    show('section-recommendation');
-
-    document.getElementById('res-need-title').innerText = userNeed;
-
-    const products = productRecommendations[userNeed][finalSkinType];
-    const ul = document.getElementById('res-products');
-    ul.innerHTML = ""; 
-
-    products.forEach(item => {
-        let li = document.createElement('li');
-        li.innerText = item;
-        ul.appendChild(li);
-    });
-}
-
-// Alur 6: Jika "Tidak", Tampilkan Penutup Estetik
-function showClosing() {
-    hide('section-diagnosis');
-    show('section-closing');
+    resultContainer.innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+            <h2 style="color: var(--primary-color); font-size: 26px; margin-bottom: 10px;">${currentResult.title}</h2>
+            <p style="color: var(--text-color); font-size: 15px; line-height: 1.6; margin-bottom: 20px;">${currentResult.desc}</p>
+            <h4 style="margin-bottom: 12px; font-size: 16px;">Rekomendasi Palet Warnamu:</h4>
+            <div style="margin-bottom: 25px;">${colorBoxesHTML}</div>
+        </div>
+    `;
 }

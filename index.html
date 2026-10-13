@@ -3,146 +3,544 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GlowCheck: Analisis Kulit & Estetika</title>
-    <!-- Font Poppins untuk kesan modern -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>GlowCheck ✨ - Color & Skin Expert System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-    <!-- SECTION 1: GENDER -->
-    <div id="section-gender" class="fade-in">
-        <h2>Pilih Gender Anda</h2>
-        <p>Bantu kami menyesuaikan diagnosis dan rekomendasi yang paling tepat.</p>
-        <div class="btn-group">
-            <button onclick="setGender('laki-laki')">Laki-Laki</button>
-            <button onclick="setGender('perempuan')">Perempuan</button>
+    <!-- HEADER BRAND -->
+    <div class="brand-header">
+        <h1>GlowCheck 🌸✨</h1>
+        <p>AI-Powered Personal Color & Skincare Expert System</p>
+    </div>
+
+    <!-- SECTION 0: PILIH UTAMA (COLOR ANALYSIS VS SKIN ANALYSIS) -->
+    <div id="section-main-choice" class="card fade-in">
+        <h2>Pilih Analisis Kamu Hari Ini! 💖</h2>
+        <p>Mau temukan palet warna musimmu atau racikan skincare & makeup terbaik?</p>
+        <div class="choice-grid">
+            <button class="choice-card" onclick="startModule('color')">
+                <span class="icon">🎨</span>
+                <h3>Color Analysis</h3>
+                <p>Temukan palet warna pakaian, rambut, & makeup yang bikin glowing seketika!</p>
+            </button>
+            <button class="choice-card" onclick="startModule('skin')">
+                <span class="icon">🌿</span>
+                <h3>Skin & Skincare Analysis</h3>
+                <p>Diagnosis jenis kulit & dapatkan rekomendasi produk lokal/Shopee akurat!</p>
+            </button>
         </div>
     </div>
 
-    <!-- SECTION 2: KEBUTUHAN (Khusus Perempuan) -->
-    <div id="section-need" class="hidden fade-in">
-        <h2>Apa Fokus Anda Hari Ini?</h2>
-        <p>Pilih preferensi rekomendasi yang ingin Anda dapatkan nanti.</p>
-        <div class="btn-group">
-            <button onclick="setNeed('skincare')">Skincare Routine</button>
-            <button onclick="setNeed('makeup')">Makeup Flawless</button>
+    <!-- ================= COLOR ANALYSIS MODULE ================= -->
+
+    <!-- SECTION C1: INTRO COLOR ANALYSIS -->
+    <div id="section-color-intro" class="card hidden fade-in">
+        <h2>Your Color Analysis Will Reveal: 🌈</h2>
+        <ul class="reveal-list">
+            <li>🌸 Seasonal Palette (Spring, Summer, Autumn, Winter)</li>
+            <li>👗 Best Clothing & Outfit Colors</li>
+            <li>✨ Best Neutrals and Accents</li>
+            <li>💄 Makeup Color Guidance & Shades</li>
+            <li>💇‍♀️ Hair Color Compatibility</li>
+            <li>🕶️ Accessory and Sunglasses Shades</li>
+        </ul>
+        <button class="btn-primary" onclick="nextColorStep()">Continue 🚀</button>
+    </div>
+
+    <!-- ROUTE PROGRESS BAR (UNTUK COLOR ANALYSIS) -->
+    <div id="route-progress-bar" class="route-progress hidden">
+        <div class="step-node active" id="node-1">1</div>
+        <div class="line" id="line-1"></div>
+        <div class="step-node" id="node-2">2</div>
+        <div class="line" id="line-2"></div>
+        <div class="step-node" id="node-3">3</div>
+    </div>
+
+    <!-- SECTION C2: PHASE 1 - NATURAL SIGNALS -->
+    <div id="section-color-phase1" class="card hidden fade-in">
+        <div class="phase-badge">Phase 1: Natural Signals 🧬</div>
+        
+        <!-- Q1: Eye Color -->
+        <div class="q-block" data-q="c1">
+            <p><strong>1. Apa warna mata alami kamu? 👀</strong></p>
+            <div class="options-grid image-options">
+                <label class="opt-card eye-card">
+                    <input type="radio" name="c_eye" value="cool" onclick="autoNext(this)">
+                    <img src="eye.color-blue.png" alt="Blue" class="eye-img">
+                    <span>Blue</span>
+                </label>
+                <label class="opt-card eye-card">
+                    <input type="radio" name="c_eye" value="neutral" onclick="autoNext(this)">
+                    <img src="eye.color-green.png" alt="Green" class="eye-img">
+                    <span>Green</span>
+                </label>
+                <label class="opt-card eye-card">
+                    <input type="radio" name="c_eye" value="warm" onclick="autoNext(this)">
+                    <img src="eye.color-hazel.png" alt="Hazel" class="eye-img">
+                    <span>Hazel</span>
+                </label>
+                <label class="opt-card eye-card">
+                    <input type="radio" name="c_eye" value="warm" onclick="autoNext(this)">
+                    <img src="eye.color-amber.png" alt="Amber/Honey" class="eye-img">
+                    <span>Amber / Honey</span>
+                </label>
+                <label class="opt-card eye-card">
+                    <input type="radio" name="c_eye" value="warm" onclick="autoNext(this)">
+                    <img src="eye.color-light brown.png" alt="Light Brown" class="eye-img">
+                    <span>Light Brown</span>
+                </label>
+                <label class="opt-card eye-card">
+                    <input type="radio" name="c_eye" value="cool" onclick="autoNext(this)">
+                    <img src="eye.color-dark brown.png" alt="Dark Brown" class="eye-img">
+                    <span>Dark Brown / Black</span>
+                </label>
+                <label class="opt-card eye-card">
+                    <input type="radio" name="c_eye" value="cool" onclick="autoNext(this)">
+                    <img src="eye.color-gray.png" alt="Gray" class="eye-img">
+                    <span>Gray</span>
+                </label>
+                <label class="opt-card eye-card">
+                    <input type="radio" name="c_eye" value="neutral" onclick="autoNext(this)">
+                    <img src="eye.color-other.jpeg" alt="Other" class="eye-img">
+                    <span>Other / Mixed</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Q2: Hair Color -->
+        <div class="q-block hidden" data-q="c2">
+            <p><strong>2. Apa warna natural rambutmu? 💇‍♀️</strong></p>
+            <div class="options-grid image-options">
+                <label class="opt-card hair-card">
+                    <input type="radio" name="c_hair" value="warm" onclick="autoNext(this)">
+                    <img src="blonde.jpg" alt="Blonde" class="hair-img">
+                    <span>Blonde</span>
+                </label>
+                <label class="opt-card hair-card">
+                    <input type="radio" name="c_hair" value="neutral" onclick="autoNext(this)">
+                    <img src="dark blonde.jpg" alt="Dark Blonde" class="hair-img">
+                    <span>Dark Blonde</span>
+                </label>
+                <label class="opt-card hair-card">
+                    <input type="radio" name="c_hair" value="warm" onclick="autoNext(this)">
+                    <img src="light brown.jpg" alt="Light Brown" class="hair-img">
+                    <span>Light Brown</span>
+                </label>
+                <label class="opt-card hair-card">
+                    <input type="radio" name="c_hair" value="neutral" onclick="autoNext(this)">
+                    <img src="medium brown.jpg" alt="Medium Brown" class="hair-img">
+                    <span>Medium Brown</span>
+                </label>
+                <label class="opt-card hair-card">
+                    <input type="radio" name="c_hair" value="cool" onclick="autoNext(this)">
+                    <img src="dark brown.jpg" alt="Dark Brown" class="hair-img">
+                    <span>Dark Brown</span>
+                </label>
+                <label class="opt-card hair-card">
+                    <input type="radio" name="c_hair" value="cool" onclick="autoNext(this)">
+                    <img src="black.jpg" alt="Black" class="hair-img">
+                    <span>Black</span>
+                </label>
+                <label class="opt-card hair-card">
+                    <input type="radio" name="c_hair" value="warm" onclick="autoNext(this)">
+                    <img src="red hair.jpg" alt="Red/Auburn" class="hair-img">
+                    <span>Red / Auburn</span>
+                </label>
+                <label class="opt-card hair-card">
+                    <input type="radio" name="c_hair" value="cool" onclick="autoNext(this)">
+                    <img src="grey hair.jpg" alt="Gray/Silver" class="hair-img">
+                    <span>Gray / Silver</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Q3: Skin Color -->
+        <div class="q-block hidden" data-q="c3">
+            <p><strong>3. Bagaimana warna kulit dasarmu? 🌸</strong></p>
+            <div class="options-grid image-options">
+                <label class="opt-card skin-card">
+                    <input type="radio" name="c_skin" value="fair" onclick="autoNext(this)">
+                    <img src="fair skin.jpeg" alt="Fair Skin" class="skin-img">
+                    <span>Fair</span>
+                </label>
+                <label class="opt-card skin-card">
+                    <input type="radio" name="c_skin" value="medium" onclick="autoNext(this)">
+                    <img src="medium skin.jpeg" alt="Medium Skin" class="skin-img">
+                    <span>Medium</span>
+                </label>
+                <label class="opt-card skin-card">
+                    <input type="radio" name="c_skin" value="tan" onclick="autoNext(this)">
+                    <img src="tan skin.jpeg" alt="Tan Skin" class="skin-img">
+                    <span>Tan</span>
+                </label>
+                <label class="opt-card skin-card">
+                    <input type="radio" name="c_skin" value="deep" onclick="autoNext(this)">
+                    <img src="deep skin.jpeg" alt="Deep Skin" class="skin-img">
+                    <span>Deep</span>
+                </label>
+                <!-- Opsi I'm Not Sure Polos Tanpa Gambar -->
+                <label class="opt-card skin-card not-sure-card">
+                    <input type="radio" name="c_skin" value="neutral" onclick="autoNext(this)">
+                    <div class="not-sure-box">
+                        <span>I'm not sure</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Q4: Sun Reaction -->
+        <div class="q-block hidden" data-q="c4">
+            <p><strong>4. Bagaimana reaksi kulitmu saat terkena matahari? ☀️</strong></p>
+            <div class="options-grid">
+                <label class="opt-card"><input type="radio" name="c_sun" value="warm" onclick="autoNext(this)"> Tan easily, rarely burns (Cepat kecokelatan, jarang terbakar)</label>
+                <label class="opt-card"><input type="radio" name="c_sun" value="cool" onclick="autoNext(this)"> Burns easily, rarely tans (Gampang kemerahan/terbakar, susah hitam)</label>
+                <label class="opt-card"><input type="radio" name="c_sun" value="neutral" onclick="autoNext(this)"> Tans slowly, occasionally burns (Pelan-pelan menghitam)</label>
+                <label class="opt-card"><input type="radio" name="c_sun" value="neutral" onclick="autoNext(this)"> Burns sometimes, tans sometimes (Kadang terbakar, kadang hitam)</label>
+            </div>
+        </div>
+
+        <!-- Q5: Veins -->
+        <div class="q-block hidden" data-q="c5">
+            <p><strong>5. Periksa urat nadi di pergelangan tanganmu: 🩺</strong></p>
+            <div class="options-grid">
+                <label class="opt-card"><input type="radio" name="c_vein" value="cool" onclick="autoNext(this)"> More blue or purple</label>
+                <label class="opt-card"><input type="radio" name="c_vein" value="warm" onclick="autoNext(this)"> Greenish or olive</label>
+                <label class="opt-card"><input type="radio" name="c_vein" value="neutral" onclick="autoNext(this)"> Both / Mixed</label>
+            </div>
+        </div>
+
+        <!-- Q6: White Shade -->
+        <label class="opt-card shirt-card">
+            <input type="radio" name="c_white" value="cool" onclick="autoNext(this)">
+            <img src="cool white.jpg" alt="Cool White" class="shirt-img">
+            <span>Cool white</span>
+        </label>
+
+        <label class="opt-card shirt-card">
+            <input type="radio" name="c_white" value="warm" onclick="autoNext(this)">
+            <img src="warm cream.jpg" alt="Warm Cream" class="shirt-img">
+            <span>Warm cream</span>
+        </label>
+
+        <label class="opt-card shirt-card">
+            <input type="radio" name="c_white" value="both" onclick="autoNext(this)">
+            <img src="white&warmcream.jpg" alt="Both" class="shirt-img">
+            <span>Both</span>
+        </label>
+
+        <label class="opt-card shirt-card not-sure-card">
+            <input type="radio" name="c_white" value="neutral" onclick="autoNext(this)">
+            <div class="not-sure-box">
+                <span>I'm not sure</span>
+            </div>
+        </label>
+
+    <!-- SECTION C2_TRANS: PHASE 1 COMPLETED -->
+    <div id="section-color-trans1" class="card hidden fade-in text-center">
+        <div class="success-badge">🎉 33% Phase 1 Completed!</div>
+        <p class="cute-msg">"We’ve captured your eye, hair, skin, and undertone clues like a true detective!🕵️‍♀️✨"</p>
+        <button class="btn-primary" onclick="goToPhase2()">Continue to Phase 2 🚀</button>
+    </div>
+
+    <!-- SECTION C3: PHASE 2 - PALETTE DIRECTION -->
+    <div id="section-color-phase2" class="card hidden fade-in">
+        <div class="phase-badge">Phase 2: Palette Direction 🎨</div>
+
+        <!-- Q1 -->
+        <div class="q-block-p2" data-qp2="1">
+            <p><strong>1. Bagaimana warna hitam pekat (*solid black*) terlihat di dekat wajahmu? 🖤</strong></p>
+            <div class="options-grid">
+                <label class="opt-card"><input type="radio" name="c2_1" value="cool" onclick="autoNextP2(this)"> Sharp and flattering (Tajam & elegan)</label>
+                <label class="opt-card"><input type="radio" name="c2_1" value="neutral" onclick="autoNextP2(this)"> A bit heavy (Agak berat)</label>
+                <label class="opt-card"><input type="radio" name="c2_1" value="warm" onclick="autoNextP2(this)"> Too harsh (Terlalu galak/pucat)</label>
+                <label class="opt-card"><input type="radio" name="c2_1" value="neutral" onclick="autoNextP2(this)"> I rarely wear black / I'm not sure</label>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="q-block-p2 hidden" data-qp2="2">
+            <p><strong>2. Suasana warna apa yang paling mencerminkan gaya hidupmu? ✨</strong></p>
+            <div class="options-grid image-options">
+                <label class="opt-card mood-card">
+                    <input type="radio" name="c2_2" value="soft" onclick="autoNextP2(this)">
+                    <img src="soft muted.jpeg" alt="Soft Muted" class="mood-img">
+                    <span>Soft Muted</span>
+                </label>
+                <label class="opt-card mood-card">
+                    <input type="radio" name="c2_2" value="bright" onclick="autoNextP2(this)">
+                    <img src="clean classic.jpeg" alt="Clean Classic" class="mood-img">
+                    <span>Clean Classic</span>
+                </label>
+                <label class="opt-card mood-card">
+                    <input type="radio" name="c2_2" value="warm" onclick="autoNextP2(this)">
+                    <img src="warm earthy.jpeg" alt="Warm Earthy" class="mood-img">
+                    <span>Warm Earthy</span>
+                </label>
+                <label class="opt-card mood-card">
+                    <input type="radio" name="c2_2" value="cool" onclick="autoNextP2(this)">
+                    <img src="cool elegant.jpeg" alt="Cool Elegant" class="mood-img">
+                    <span>Cool Elegant</span>
+                </label>
+                <label class="opt-card mood-card">
+                    <input type="radio" name="c2_2" value="deep" onclick="autoNextP2(this)">
+                    <img src="deep dramatic.jpeg" alt="Deep Dramatic" class="mood-img">
+                    <span>Deep Dramatic</span>
+                </label>
+                <label class="opt-card mood-card">
+                    <input type="radio" name="c2_2" value="bright" onclick="autoNextP2(this)">
+                    <img src="bright playful.jpeg" alt="Bright Playful" class="mood-img">
+                    <span>Bright Playful</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="q-block-p2 hidden" data-qp2="3">
+            <p><strong>3. Teman sering bilang "Wah, kamu glowing banget!" saat kamu pakai baju warna... 🌟</strong></p>
+            <div class="options-grid image-options">
+                <label class="opt-card glow-card">
+                    <input type="radio" name="c2_3" value="soft" onclick="autoNextP2(this)">
+                    <img src="soft blush.png" alt="Soft Blush" class="glow-img">
+                    <span>Soft Blush</span>
+                </label>
+                <label class="opt-card glow-card">
+                    <input type="radio" name="c2_3" value="bright" onclick="autoNextP2(this)">
+                    <img src="crisp white.png" alt="Crisp White" class="glow-img">
+                    <span>Crisp White</span>
+                </label>
+                <label class="opt-card glow-card">
+                    <input type="radio" name="c2_3" value="cool" onclick="autoNextP2(this)">
+                    <img src="navy.png" alt="Navy" class="glow-img">
+                    <span>Navy</span>
+                </label>
+                <label class="opt-card glow-card">
+                    <input type="radio" name="c2_3" value="warm" onclick="autoNextP2(this)">
+                    <img src="warm caramel.png" alt="Warm Caramel" class="glow-img">
+                    <span>Warm Caramel</span>
+                </label>
+                <label class="opt-card glow-card">
+                    <input type="radio" name="c2_3" value="warm" onclick="autoNextP2(this)">
+                    <img src="olive green.png" alt="Olive Green" class="glow-img">
+                    <span>Olive Green</span>
+                </label>
+                <label class="opt-card glow-card">
+                    <input type="radio" name="c2_3" value="bright" onclick="autoNextP2(this)">
+                    <img src="bold red.png" alt="Bold Red" class="glow-img">
+                    <span>Bold Red</span>
+                </label>
+                <label class="opt-card glow-card">
+                    <input type="radio" name="c2_3" value="soft" onclick="autoNextP2(this)">
+                    <img src="light peach.png" alt="Light Peach" class="glow-img">
+                    <span>Light Peach</span>
+                </label>
+                <label class="opt-card glow-card not-sure-card">
+                    <input type="radio" name="c2_3" value="neutral" onclick="autoNextP2(this)">
+                    <div class="not-sure-box">
+                        <span>I don't know - let's find out!</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Q4 (MULTI-CHOICE) -->
+        <div class="q-block-p2 hidden" data-qp2="4">
+            <p><strong>4. Warna aksen apa saja yang paling ingin kamu pakai? (Pilih satu atau lebih) 🎨</strong></p>
+            <div class="options-grid color-swatch-grid">
+                <label class="opt-card"><input type="checkbox" name="c2_4" value="red"> <span class="color-dot" style="background:#ff4d4d;"></span> Red</label>
+                <label class="opt-card"><input type="checkbox" name="c2_4" value="pink"> <span class="color-dot" style="background:#ff99bb;"></span> Pink</label>
+                <label class="opt-card"><input type="checkbox" name="c2_4" value="emerald"> <span class="color-dot" style="background:#00b33c;"></span> Emerald</label>
+                <label class="opt-card"><input type="checkbox" name="c2_4" value="blue"> <span class="color-dot" style="background:#0066ff;"></span> Royal Blue</label>
+                <label class="opt-card"><input type="checkbox" name="c2_4" value="burgundy"> <span class="color-dot" style="background:#800000;"></span> Burgundy</label>
+                <label class="opt-card"><input type="checkbox" name="c2_4" value="coral"> <span class="color-dot" style="background:#ff7f50;"></span> Coral</label>
+                <label class="opt-card"><input type="checkbox" name="c2_4" value="lavender"> <span class="color-dot" style="background:#cc99ff;"></span> Lavender</label>
+                <label class="opt-card"><input type="checkbox" name="c2_4" value="teal"> <span class="color-dot" style="background:#008080;"></span> Teal</label>
+                <label class="opt-card"><input type="checkbox" name="c2_4" value="mustard"> <span class="color-dot" style="background:#ffcc00;"></span> Mustard</label>
+                <label class="opt-card"><input type="checkbox" name="c2_4" value="minimal"> None - Keep it minimal</label>
+            </div>
+            <button class="btn-primary mt-20" onclick="finishPhase2()">Continue 🚀</button>
         </div>
     </div>
 
-    <!-- SECTION 3: TES KONDISI KULIT (10 Pertanyaan) -->
-    <div id="section-assessment" class="hidden fade-in">
-        <h2>Skin Assessment Lab</h2>
-        <p class="subtitle">Jawab 10 pertanyaan ini sesuai dengan kondisi kulitmu sehari-hari.</p>
-        <form id="skinForm">
-            <!-- P1 -->
-            <div class="question-block">
-                <p><strong>1. Bagaimana sensasi kulit wajah Anda setelah mencuci muka?</strong></p>
-                <label><input type="radio" name="q1" value="1" required> Terasa kaku, ketat, dan tertarik</label>
-                <label><input type="radio" name="q1" value="2"> Normal di pipi, tapi sedikit berminyak di hidung/dahi</label>
-                <label><input type="radio" name="q1" value="3"> Cepat terasa licin dan berminyak di seluruh wajah</label>
-            </div>
-            <!-- P2 -->
-            <div class="question-block">
-                <p><strong>2. Bagaimana tampilan pori-pori di wajah Anda?</strong></p>
-                <label><input type="radio" name="q2" value="1" required> Sangat rapat, hampir tidak terlihat</label>
-                <label><input type="radio" name="q2" value="2"> Terlihat jelas hanya di area T-Zone (Dahi, Hidung, Dagu)</label>
-                <label><input type="radio" name="q2" value="3"> Terlihat besar dan jelas di hampir seluruh area wajah</label>
-            </div>
-            <!-- P3 -->
-            <div class="question-block">
-                <p><strong>3. Seberapa sering Anda mengalami masalah jerawat atau komedo?</strong></p>
-                <label><input type="radio" name="q3" value="1" required> Sangat jarang, kulit lebih sering terkelupas</label>
-                <label><input type="radio" name="q3" value="2"> Kadang-kadang, biasanya muncul di area hidung atau dahi</label>
-                <label><input type="radio" name="q3" value="3"> Sangat sering dan mudah berjerawat di mana saja</label>
-            </div>
-            <!-- P4 -->
-            <div class="question-block">
-                <p><strong>4. Bagaimana tampilan wajah Anda saat siang hari (setengah hari beraktivitas)?</strong></p>
-                <label><input type="radio" name="q4" value="1" required> Terlihat kusam atau *matte*</label>
-                <label><input type="radio" name="q4" value="2"> Mengkilap hanya di area tengah wajah (T-Zone)</label>
-                <label><input type="radio" name="q4" value="3"> Sangat mengkilap dan berminyak di seluruh wajah</label>
-            </div>
-            <!-- P5 -->
-            <div class="question-block">
-                <p><strong>5. Bagaimana reaksi kulit Anda saat berada di ruangan ber-AC terlalu lama?</strong></p>
-                <label><input type="radio" name="q5" value="1" required> Sangat kering, gatal, atau mengelupas</label>
-                <label><input type="radio" name="q5" value="2"> Terasa biasa saja, hanya sedikit kering di pipi</label>
-                <label><input type="radio" name="q5" value="3"> Tetap lembap dan memproduksi minyak seperti biasa</label>
-            </div>
-            <!-- P6 -->
-            <div class="question-block">
-                <p><strong>6. Saat menggunakan makeup (foundation/bedak), apa masalah utamanya?</strong></p>
-                <label><input type="radio" name="q6" value="1" required> Cepat *crack* (pecah) atau terlihat *patchy* (mengelupas)</label>
-                <label><input type="radio" name="q6" value="2"> Luntur/longsor hanya di bagian hidung dan dahi</label>
-                <label><input type="radio" name="q6" value="3"> Cepat luntur, mencair, atau bergeser di seluruh wajah</label>
-            </div>
-            <!-- P7 -->
-            <div class="question-block">
-                <p><strong>7. Bagaimana tekstur kulit Anda saat disentuh dengan jari?</strong></p>
-                <label><input type="radio" name="q7" value="1" required> Terasa agak kasar, tipis, atau bersisik</label>
-                <label><input type="radio" name="q7" value="2"> Halus di pipi, tapi terasa berminyak di hidung</label>
-                <label><input type="radio" name="q7" value="3"> Terasa tebal, licin, dan lengket</label>
-            </div>
-            <!-- P8 -->
-            <div class="question-block">
-                <p><strong>8. Seberapa sering Anda merasa butuh memakai pelembap (moisturizer)?</strong></p>
-                <label><input type="radio" name="q8" value="1" required> Sangat butuh, bisa diaplikasikan berulang kali</label>
-                <label><input type="radio" name="q8" value="2"> Cukup sekali sehari, itu pun hanya sedikit</label>
-                <label><input type="radio" name="q8" value="3"> Menghindarinya karena membuat wajah terasa gerah/berat</label>
-            </div>
-            <!-- P9 -->
-            <div class="question-block">
-                <p><strong>9. Bagaimana reaksi kulit Anda saat terkena paparan sinar matahari?</strong></p>
-                <label><input type="radio" name="q9" value="1" required> Mudah memerah, perih, dan terasa sangat kering</label>
-                <label><input type="radio" name="q9" value="2"> Normal, kemerahan sedikit tapi cepat mereda</label>
-                <label><input type="radio" name="q9" value="3"> Cepat terlihat kusam dan memproduksi banyak minyak</label>
-            </div>
-            <!-- P10 -->
-            <div class="question-block">
-                <p><strong>10. Apakah Anda memiliki garis halus pada wajah?</strong></p>
-                <label><input type="radio" name="q10" value="1" required> Ya, garis halus mudah terlihat meski di usia muda</label>
-                <label><input type="radio" name="q10" value="2"> Terlihat samar hanya saat berekspresi (senyum/mengerut)</label>
-                <label><input type="radio" name="q10" value="3"> Hampir tidak ada, kulit terasa kencang dan elastis</label>
-            </div>
-
-            <button type="button" class="btn-primary" onclick="calculateSkinType()">Proses Diagnosis</button>
-        </form>
+    <!-- SECTION C4_TRANS: PHASE 2 COMPLETED -->
+    <div id="section-color-trans2" class="card hidden fade-in text-center">
+        <div class="success-badge">🌟 71% Phase 2 Completed!</div>
+        <p class="cute-msg">"Next, we'll compare it with the colors you already wear and avoid! Hampir selesai lho! 👗✨"</p>
+        <button class="btn-primary" onclick="goToPhase3()">Continue to Phase 3 🚀</button>
     </div>
 
-    <!-- SECTION 4: HASIL DIAGNOSIS & PERTANYAAN REKOMENDASI -->
-    <div id="section-diagnosis" class="hidden fade-in">
-        <h2>Diagnosis Selesai!</h2>
-        <div class="result-box">
-            <p>Berdasarkan analisis sistem pakar, jenis kulit Anda adalah:</p>
-            <h3 id="diagnosis-skin-type" class="highlight-text"></h3>
+    <!-- SECTION C5: PHASE 3 - COLOR HABITS & PREFERENCES -->
+    <div id="section-color-phase3" class="card hidden fade-in">
+        <div class="phase-badge">Phase 3: Color Habits & Goals 🛍️</div>
+
+        <!-- Q1: Neutral Palette -->
+        <div class="q-block-p3" data-qp3="1">
+            <p><strong>1. Palet warna netral apa yang paling kamu sukai? (Pilih insting pertamamu!) 🧥</strong></p>
+            <div class="options-grid image-options">
+                <label class="opt-card neutral-card">
+                    <input type="radio" name="c3_1" value="bright" onclick="autoNextP3(this)">
+                    <img src="high contrast classic.jpeg" alt="High Contrast Classic" class="neutral-img">
+                    <span>High Contrast Classic</span>
+                </label>
+                <label class="opt-card neutral-card">
+                    <input type="radio" name="c3_1" value="soft" onclick="autoNextP3(this)">
+                    <img src="soft blended.jpeg" alt="Soft Blended" class="neutral-img">
+                    <span>Soft Blended</span>
+                </label>
+                <label class="opt-card neutral-card">
+                    <input type="radio" name="c3_1" value="light" onclick="autoNextP3(this)">
+                    <img src="light fresh.jpeg" alt="Light Fresh" class="neutral-img">
+                    <span>Light Fresh</span>
+                </label>
+                <label class="opt-card neutral-card">
+                    <input type="radio" name="c3_1" value="warm" onclick="autoNextP3(this)">
+                    <img src="rich warm.jpeg" alt="Rich Warm" class="neutral-img">
+                    <span>Rich Warm</span>
+                </label>
+            </div>
         </div>
-        <p style="margin-top:20px;">Apakah Anda ingin melihat rekomendasi <strong id="diagnosis-need"></strong> khusus untuk kulit Anda?</p>
-        <div class="btn-group row-btns">
-            <button class="btn-primary" onclick="showRecommendations()">Ya, Tampilkan!</button>
-            <button class="btn-secondary" onclick="showClosing()">Tidak, Terima Kasih</button>
+
+        <!-- Q2 -->
+        <div class="q-block-p3 hidden" data-qp3="2">
+            <p><strong>2. Apa hal tersulit saat kamu memilih warna pakaian? 🤔</strong></p>
+            <div class="options-grid">
+                <label class="opt-card"><input type="radio" name="c3_2" value="1" onclick="autoNextP3(this)"> Some colors make me look tired</label>
+                <label class="opt-card"><input type="radio" name="c3_2" value="2" onclick="autoNextP3(this)"> I buy colors but don't wear them</label>
+                <label class="opt-card"><input type="radio" name="c3_2" value="3" onclick="autoNextP3(this)"> I mostly wear black clothes</label>
+                <label class="opt-card"><input type="radio" name="c3_2" value="4" onclick="autoNextP3(this)"> I'm unsure what matches my hair and eyes</label>
+                <label class="opt-card"><input type="radio" name="c3_2" value="5" onclick="autoNextP3(this)"> I just want clear and practical color guidance!</label>
+            </div>
+        </div>
+
+        <!-- Q3 (MULTI) -->
+        <div class="q-block-p3 hidden" data-qp3="3">
+            <p><strong>3. Warna apa saja yang biasanya PALING kamu hindari? 🚫 (Pilih satu atau lebih)</strong></p>
+            <div class="options-grid color-swatch-grid">
+                <label class="opt-card"><input type="checkbox" name="c3_3" value="orange"> <span class="color-dot" style="background:orange;"></span> Orange</label>
+                <label class="opt-card"><input type="checkbox" name="c3_3" value="pink"> <span class="color-dot" style="background:pink;"></span> Pink</label>
+                <label class="opt-card"><input type="checkbox" name="c3_3" value="green"> <span class="color-dot" style="background:green;"></span> Green</label>
+                <label class="opt-card"><input type="checkbox" name="c3_3" value="brown"> <span class="color-dot" style="background:saddlebrown;"></span> Brown</label>
+                <label class="opt-card"><input type="checkbox" name="c3_3" value="black"> <span class="color-dot" style="background:black;"></span> Black</label>
+                <label class="opt-card"><input type="checkbox" name="c3_3" value="yellow"> <span class="color-dot" style="background:gold;"></span> Yellow</label>
+                <label class="opt-card"><input type="checkbox" name="c3_3" value="purple"> <span class="color-dot" style="background:purple;"></span> Purple</label>
+                <label class="opt-card"><input type="checkbox" name="c3_3" value="blue"> <span class="color-dot" style="background:blue;"></span> Blue</label>
+                <label class="opt-card"><input type="checkbox" name="c3_3" value="white"> <span class="color-dot" style="background:whitesmoke; border:1px solid #ccc;"></span> White</label>
+                <label class="opt-card"><input type="checkbox" name="c3_3" value="none"> I don't avoid any</label>
+            </div>
+            <button class="btn-primary mt-20" onclick="nextP3SubQ(4)">Continue 🚀</button>
+        </div>
+
+        <!-- Q4 (MULTI) -->
+        <div class="q-block-p3 hidden" data-qp3="4">
+            <p><strong>4. Apa tujuan utamamu menggunakan palet warna ini? 🎯 (Pilih satu atau lebih)</strong></p>
+            <div class="options-grid">
+                <label class="opt-card"><input type="checkbox" name="c3_4" value="polished"> Tampil lebih profesional & polished</label>
+                <label class="opt-card"><input type="checkbox" name="c3_4" value="fast"> Bangun/mix and match pakaian lebih cepat</label>
+                <label class="opt-card"><input type="checkbox" name="c3_4" value="refresh"> Refresh isi lemari pakaianku</label>
+                <label class="opt-card"><input type="checkbox" name="c3_4" value="hair"> Eksperimen warna rambut baru</label>
+            </div>
+            <button class="btn-primary mt-20" onclick="nextP3SubQ(5)">Continue 🚀</button>
+        </div>
+
+        <!-- Q5 (MULTI) -->
+        <div class="q-block-p3 hidden" data-qp3="5">
+            <p><strong>5. Di mana kamu paling ingin menggunakan palet warna ini? 📍 (Pilih satu atau lebih)</strong></p>
+            <div class="options-grid">
+                <label class="opt-card"><input type="checkbox" name="c3_5" value="daily"> Outfit sehari-hari / casual</label>
+                <label class="opt-card"><input type="checkbox" name="c3_5" value="work"> Kerja / Formal professional looks</label>
+                <label class="opt-card"><input type="checkbox" name="c3_5" value="dates"> Kencan & Acara spesial</label>
+                <label class="opt-card"><input type="checkbox" name="c3_5" value="shop"> Belanja online (biar gak salah beli warna)</label>
+            </div>
+            <button class="btn-primary mt-20" onclick="nextP3SubQ(6)">Continue 🚀</button>
+        </div>
+
+        <!-- Q6 -->
+        <div class="q-block-p3 hidden" data-qp3="6">
+            <p><strong>6. Apakah kamu sering minta pendapat teman saat belanja baju? 👯‍♀️</strong></p>
+            <div class="options-grid">
+                <label class="opt-card"><input type="radio" name="c3_6" value="1" onclick="autoNextP3Sub(7)"> Sometimes (Kadang-kadang)</label>
+                <label class="opt-card"><input type="radio" name="c3_6" value="2" onclick="autoNextP3Sub(7)"> Often (Sering banget)</label>
+                <label class="opt-card"><input type="radio" name="c3_6" value="3" onclick="autoNextP3Sub(7)"> Never (Pilih sendiri)</label>
+            </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="q-block-p3 hidden" data-qp3="7">
+            <p><strong>7. Saat belanja, apakah kamu sering kesulitan memadukan item pakaian? 🧩</strong></p>
+            <div class="options-grid">
+                <label class="opt-card"><input type="radio" name="c3_7" value="1" onclick="autoNextP3Sub(8)"> Sometimes</label>
+                <label class="opt-card"><input type="radio" name="c3_7" value="2" onclick="autoNextP3Sub(8)"> Often</label>
+                <label class="opt-card"><input type="radio" name="c3_7" value="3" onclick="autoNextP3Sub(8)"> Never</label>
+            </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="q-block-p3 hidden" data-qp3="8">
+            <p><strong>8. Apakah kamu ingin panduan shade makeup disertakan? 💄</strong></p>
+            <div class="options-grid">
+                <label class="opt-card"><input type="radio" name="c3_8" value="everyday" onclick="finishPhase3()"> Yes, untuk everyday makeup</label>
+                <label class="opt-card"><input type="radio" name="c3_8" value="lips" onclick="finishPhase3()"> Yes, khusus warna lipstick & blush</label>
+                <label class="opt-card"><input type="radio" name="c3_8" value="simple" onclick="finishPhase3()"> Hanya panduan simpel saja</label>
+                <label class="opt-card"><input type="radio" name="c3_8" value="no" onclick="finishPhase3()"> Tidak, fokus warna pakaian saja</label>
+            </div>
         </div>
     </div>
 
-    <!-- SECTION 5: DAFTAR REKOMENDASI -->
-    <div id="section-recommendation" class="hidden fade-in">
-        <h2>Rekomendasi Personal Anda</h2>
-        <div class="result-box">
-            <p><strong>Fokus:</strong> <span id="res-need-title" style="text-transform: capitalize;"></span></p>
-            <hr style="border: 0.5px solid #E5989B; margin: 15px 0;">
-            <ul id="res-products" class="custom-list"></ul>
-        </div>
-        <button class="btn-outline" style="margin-top: 20px; width: 100%;" onclick="location.reload()">Selesai & Ulangi Tes</button>
+    <!-- SECTION C6_TRANS: PHASE 3 COMPLETED -->
+    <div id="section-color-trans3" class="card hidden fade-in text-center">
+        <div class="success-badge">🎯 93% Phase Completed!</div>
+        <p class="cute-msg">"Satu langkah terakhir sebelum report warna personalmu keluar! ✨"</p>
+        <button class="btn-primary" onclick="goToLoading()">Continue to Final Report 🚀</button>
     </div>
 
-    <!-- SECTION 6: PENUTUP (Jika menolak rekomendasi) -->
-    <div id="section-closing" class="hidden fade-in">
-        <div class="closing-box">
-            <h2>Terima Kasih! ✨</h2>
-            <p>Semoga hasil diagnosis ini membantumu lebih memahami kondisi kulitmu. Tetap percaya diri dan rawat kulitmu dengan baik!</p>
-            <button class="btn-outline" style="margin-top: 20px;" onclick="location.reload()">Kembali ke Halaman Awal</button>
+    <!-- SECTION C7: LOADING & QUICK REPORT QUESTION -->
+    <div id="section-color-loading" class="card hidden fade-in text-center">
+        <h2>Analyzing Your Answers... 🔮</h2>
+        <div class="quick-report-box">
+            <p><strong>Quick Report Question:</strong> Would you like us to include a hair color guide? 💇‍♀️</p>
+            <div class="btn-group row-btns">
+                <button class="btn-secondary" onclick="setHairGuide(true)">Yes, Please! ✨</button>
+                <button class="btn-secondary" onclick="setHairGuide(false)">No Thanks</button>
+            </div>
         </div>
+
+        <div class="loading-steps mt-20">
+            <div id="load-step-1" class="load-step">⏳ Matching undertone, hair, eye, & signals...</div>
+            <div id="load-step-2" class="load-step opacity-low">🎨 Reviewing your colors & avoiding list...</div>
+            <div id="load-step-3" class="load-step opacity-low">✨ Preparing your personalized color wheel report...</div>
+        </div>
+    </div>
+
+    <!-- SECTION C8: COLOR ANALYSIS RESULT REPORT -->
+    <div id="section-color-result" class="card hidden fade-in">
+        <h2 class="text-center">Your Personalized Color Analysis & Palette are Ready! 😍</h2>
+        
+        <!-- Simulasi Color Wheel Report mirip gambar referensi user -->
+        <div class="color-report-container">
+            <div class="season-badge-main" id="res-season-title">SPRING WARM & BRIGHT 🌸</div>
+            
+            <div class="color-wheel-mockup">
+                <div class="wheel-center">YOU 💖</div>
+                <div class="wheel-quadrant spring">SPRING</div>
+                <div class="wheel-quadrant summer">SUMMER</div>
+                <div class="wheel-quadrant autumn">AUTUMN</div>
+                <div class="wheel-quadrant winter">WINTER</div>
+            </div>
+
+            <div class="result-details-box mt-20">
+                <h3>📋 Rangkuman Palette Personalmu:</h3>
+                <ul id="res-color-list" class="custom-list">
+                    <!-- Dinamis via JS -->
+                </ul>
+                <div id="res-hair-guide-box" class="mt-15 hidden">
+                    <p><strong>💇‍♀️ Hair Color Recommendation:</strong> <span id="res-hair-text"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-primary mt-20" onclick="location.reload()">Ulangi Analisis 🔄</button>
     </div>
 </div>
 
