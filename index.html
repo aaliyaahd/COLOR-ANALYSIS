@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seasonal Color Analysis Quiz</title>
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Your Color Story — Seasonal Color Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-theme="rose">
+
+    <aside class="studio-controls" aria-label="Personalize your experience">
+        <button class="studio-toggle" id="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Switch website theme"><span class="control-icon">☾</span><span id="theme-label">Berry night</span></button>
+        <button class="studio-toggle music-toggle" id="music-toggle" type="button" onclick="toggleMusic()" aria-pressed="false"><span class="control-icon" id="music-icon">♫</span><span id="music-label">Music off</span></button>
+    </aside>
 
     <div class="quiz-app-container">
         
@@ -41,7 +45,7 @@
         
         <!-- Q1: Eye Color -->
         <div id="screen-q1" class="quiz-screen hidden fade-in">
-            <h2 class="question-title">1. Apa warna mata alami kamu? 👀</h2>
+            <h2 class="question-title">1. What is your natural eye color?👀</h2>
             <div class="grid-2x2">
                 <label class="image-opt-card" onclick="nextScreen('screen-q1', 'screen-q2', '20%')">
                     <input type="radio" name="c_eye" value="cool">
@@ -88,7 +92,7 @@
 
         <!-- Q2: Hair Color -->
         <div class="q-block hidden" data-q="c2">
-            <p><strong>2. Apa warna natural rambutmu? 💇‍♀️</strong></p>
+            <p><strong>2. What is your natural hair color?💇‍♀️</strong></p>
             <div class="options-grid image-options">
                 <label class="opt-card hair-card">
                     <input type="radio" name="c_hair" value="warm" onclick="autoNext(this)">
@@ -135,7 +139,7 @@
 
         <!-- Q3: Skin Color -->
         <div class="q-block hidden" data-q="c3">
-            <p><strong>3. Bagaimana warna kulit dasarmu? 🌸</strong></p>
+            <p><strong>3. What best matches your skin color?🌸</strong></p>
             <div class="options-grid image-options">
                 <label class="opt-card skin-card">
                     <input type="radio" name="c_skin" value="fair" onclick="autoNext(this)">
@@ -169,18 +173,18 @@
 
         <!-- Q4: Sun Reaction -->
         <div class="q-block hidden" data-q="c4">
-            <p><strong>4. Bagaimana reaksi kulitmu saat terkena matahari? ☀️</strong></p>
+            <p><strong>4. How does your skin react to the sun exposure?☀️</strong></p>
             <div class="options-grid">
-                <label class="opt-card"><input type="radio" name="c_sun" value="warm" onclick="autoNext(this)"> Tan easily, rarely burns (Cepat kecokelatan, jarang terbakar)</label>
-                <label class="opt-card"><input type="radio" name="c_sun" value="cool" onclick="autoNext(this)"> Burns easily, rarely tans (Gampang kemerahan/terbakar, susah hitam)</label>
-                <label class="opt-card"><input type="radio" name="c_sun" value="neutral" onclick="autoNext(this)"> Tans slowly, occasionally burns (Pelan-pelan menghitam)</label>
-                <label class="opt-card"><input type="radio" name="c_sun" value="neutral" onclick="autoNext(this)"> Burns sometimes, tans sometimes (Kadang terbakar, kadang hitam)</label>
+                <label class="opt-card"><input type="radio" name="c_sun" value="warm" onclick="autoNext(this)"> Tan easily, rarely burns</label>
+                <label class="opt-card"><input type="radio" name="c_sun" value="cool" onclick="autoNext(this)"> Burns easily, rarely tans</label>
+                <label class="opt-card"><input type="radio" name="c_sun" value="neutral" onclick="autoNext(this)"> Tans slowly, occasionally burns</label>
+                <label class="opt-card"><input type="radio" name="c_sun" value="neutral" onclick="autoNext(this)"> Burns sometimes, tans sometimes</label>
             </div>
         </div>
 
         <!-- Q5: Veins -->
         <div class="q-block hidden" data-q="c5">
-            <p><strong>5. Periksa urat nadi di pergelangan tanganmu: 🩺</strong></p>
+            <p><strong>5. Look closely at your veins by your wrist, are they blue or green?🩺</strong></p>
             <div class="options-grid">
                 <label class="opt-card"><input type="radio" name="c_vein" value="cool" onclick="autoNext(this)"> More blue or purple</label>
                 <label class="opt-card"><input type="radio" name="c_vein" value="warm" onclick="autoNext(this)"> Greenish or olive</label>
@@ -189,6 +193,9 @@
         </div>
 
         <!-- Q6: White Shade -->
+        <div class="q-block hidden" data-q="c6">
+            <p><strong>6. Which shade of white gives you a fresher, more vibrant look?🤍</strong></p>
+            <div class="options-grid image-options">
         <label class="opt-card shirt-card">
             <input type="radio" name="c_white" value="cool" onclick="autoNext(this)">
             <img src="images/cool white.jpg" alt="Cool White" class="shirt-img">
@@ -213,11 +220,14 @@
                 <span>I'm not sure</span>
             </div>
         </label>
+            </div>
+        </div>
 
     <!-- SECTION C2_TRANS: PHASE 1 COMPLETED -->
     <div id="section-color-trans1" class="card hidden fade-in text-center">
         <div class="success-badge">🎉 33% Phase 1 Completed!</div>
-        <p class="cute-msg">"We’ve captured your eye, hair, skin, and undertone clues like a true detective!🕵️‍♀️✨"</p>
+        <p class="cute-msg">We’ve gathered your natural clues — now let’s discover the colors that make you glow. ✨</p>
+        <div class="beauty-route" aria-label="Beauty journey progress"><div class="route-track"><span class="route-fill route-fill-1"></span></div><div class="route-stops"><div class="route-stop done"><span>♡</span><small>Natural<br>signals</small></div><div class="route-stop current"><span>✧</span><small>Palette<br>direction</small></div><div class="route-stop"><span>✿</span><small>Your<br>style</small></div><div class="route-stop"><span>✦</span><small>Color<br>report</small></div></div></div>
         <button class="btn-primary" onclick="goToPhase2()">Continue to Phase 2 🚀</button>
     </div>
 
@@ -227,18 +237,18 @@
 
         <!-- Q1 -->
         <div class="q-block-p2" data-qp2="1">
-            <p><strong>1. Bagaimana warna hitam pekat (*solid black*) terlihat di dekat wajahmu? 🖤</strong></p>
+            <p><strong>1. How does solid black usually look near your face?🖤</strong></p>
             <div class="options-grid">
-                <label class="opt-card"><input type="radio" name="c2_1" value="cool" onclick="autoNextP2(this)"> Sharp and flattering (Tajam & elegan)</label>
-                <label class="opt-card"><input type="radio" name="c2_1" value="neutral" onclick="autoNextP2(this)"> A bit heavy (Agak berat)</label>
-                <label class="opt-card"><input type="radio" name="c2_1" value="warm" onclick="autoNextP2(this)"> Too harsh (Terlalu galak/pucat)</label>
+                <label class="opt-card"><input type="radio" name="c2_1" value="cool" onclick="autoNextP2(this)"> Sharp and flattering</label>
+                <label class="opt-card"><input type="radio" name="c2_1" value="neutral" onclick="autoNextP2(this)"> A bit heavy</label>
+                <label class="opt-card"><input type="radio" name="c2_1" value="warm" onclick="autoNextP2(this)"> Too harsh</label>
                 <label class="opt-card"><input type="radio" name="c2_1" value="neutral" onclick="autoNextP2(this)"> I rarely wear black / I'm not sure</label>
             </div>
         </div>
 
         <!-- Q2 -->
         <div class="q-block-p2 hidden" data-qp2="2">
-            <p><strong>2. Suasana warna apa yang paling mencerminkan gaya hidupmu? ✨</strong></p>
+            <p><strong>2. Which color mood feels most like your style? ✨</strong></p>
             <div class="options-grid image-options">
                 <label class="opt-card mood-card">
                     <input type="radio" name="c2_2" value="soft" onclick="autoNextP2(this)">
@@ -275,7 +285,7 @@
 
         <!-- Q3 -->
         <div class="q-block-p2 hidden" data-qp2="3">
-            <p><strong>3. Teman sering bilang "Wah, kamu glowing banget!" saat kamu pakai baju warna... 🌟</strong></p>
+            <p><strong>3. Friends tell you "Woah you're glowing!" when you wear...🌟</strong></p>
             <div class="options-grid image-options">
                 <label class="opt-card glow-card">
                     <input type="radio" name="c2_3" value="soft" onclick="autoNextP2(this)">
@@ -323,18 +333,18 @@
 
         <!-- Q4 (MULTI-CHOICE) -->
         <div class="q-block-p2 hidden" data-qp2="4">
-            <p><strong>4. Warna aksen apa saja yang paling ingin kamu pakai? (Pilih satu atau lebih) 🎨</strong></p>
+            <p><strong>4. What accent colors are you most open to wearing? (Choose one or more)🎨</strong></p>
             <div class="options-grid color-swatch-grid">
-                <label class="opt-card"><input type="checkbox" name="c2_4" value="red"> <span class="color-dot" style="background:#ff4d4d;"></span> Red</label>
-                <label class="opt-card"><input type="checkbox" name="c2_4" value="pink"> <span class="color-dot" style="background:#ff99bb;"></span> Pink</label>
-                <label class="opt-card"><input type="checkbox" name="c2_4" value="emerald"> <span class="color-dot" style="background:#00b33c;"></span> Emerald</label>
-                <label class="opt-card"><input type="checkbox" name="c2_4" value="blue"> <span class="color-dot" style="background:#0066ff;"></span> Royal Blue</label>
-                <label class="opt-card"><input type="checkbox" name="c2_4" value="burgundy"> <span class="color-dot" style="background:#800000;"></span> Burgundy</label>
-                <label class="opt-card"><input type="checkbox" name="c2_4" value="coral"> <span class="color-dot" style="background:#ff7f50;"></span> Coral</label>
-                <label class="opt-card"><input type="checkbox" name="c2_4" value="lavender"> <span class="color-dot" style="background:#cc99ff;"></span> Lavender</label>
-                <label class="opt-card"><input type="checkbox" name="c2_4" value="teal"> <span class="color-dot" style="background:#008080;"></span> Teal</label>
-                <label class="opt-card"><input type="checkbox" name="c2_4" value="mustard"> <span class="color-dot" style="background:#ffcc00;"></span> Mustard</label>
-                <label class="opt-card"><input type="checkbox" name="c2_4" value="minimal"> None - Keep it minimal</label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="red"> <span class="color-dot" style="background:#ff4d4d;" aria-hidden="true"></span><span class="swatch-label">Red</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="pink"> <span class="color-dot" style="background:#ff99bb;" aria-hidden="true"></span><span class="swatch-label">Pink</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="emerald"> <span class="color-dot" style="background:#00b33c;" aria-hidden="true"></span><span class="swatch-label">Emerald</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="blue"> <span class="color-dot" style="background:#0066ff;" aria-hidden="true"></span><span class="swatch-label">Royal Blue</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="burgundy"> <span class="color-dot" style="background:#800000;" aria-hidden="true"></span><span class="swatch-label">Burgundy</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="coral"> <span class="color-dot" style="background:#ff7f50;" aria-hidden="true"></span><span class="swatch-label">Coral</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="lavender"> <span class="color-dot" style="background:#cc99ff;" aria-hidden="true"></span><span class="swatch-label">Lavender</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="teal"> <span class="color-dot" style="background:#008080;" aria-hidden="true"></span><span class="swatch-label">Teal</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="mustard"> <span class="color-dot" style="background:#ffcc00;" aria-hidden="true"></span><span class="swatch-label">Mustard</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="minimal"> <span class="color-dot neutral-dot" aria-hidden="true">✦</span><span class="swatch-label">None - Keep it minimal</span></label>
             </div>
             <button class="btn-primary mt-20" onclick="finishPhase2()">Continue 🚀</button>
         </div>
@@ -343,7 +353,8 @@
     <!-- SECTION C4_TRANS: PHASE 2 COMPLETED -->
     <div id="section-color-trans2" class="card hidden fade-in text-center">
         <div class="success-badge">🌟 71% Phase 2 Completed!</div>
-        <p class="cute-msg">"Next, we'll compare it with the colors you already wear and avoid! Hampir selesai lho! 👗✨"</p>
+        <p class="cute-msg">Your palette is taking shape. Next, we’ll connect it with your everyday style. 👗</p>
+        <div class="beauty-route" aria-label="Beauty journey progress"><div class="route-track"><span class="route-fill route-fill-2"></span></div><div class="route-stops"><div class="route-stop done"><span>♡</span><small>Natural<br>signals</small></div><div class="route-stop done"><span>✧</span><small>Palette<br>direction</small></div><div class="route-stop current"><span>✿</span><small>Your<br>style</small></div><div class="route-stop"><span>✦</span><small>Color<br>report</small></div></div></div>
         <button class="btn-primary" onclick="goToPhase3()">Continue to Phase 3 🚀</button>
     </div>
 
@@ -353,7 +364,7 @@
 
         <!-- Q1: Neutral Palette -->
         <div class="q-block-p3" data-qp3="1">
-            <p><strong>1. Palet warna netral apa yang paling kamu sukai? (Pilih insting pertamamu!) 🧥</strong></p>
+            <p><strong>1. What is your preferred neutral palette? (Choose your first instinct!) 🧥</strong></p>
             <div class="options-grid image-options">
                 <label class="opt-card neutral-card">
                     <input type="radio" name="c3_1" value="bright" onclick="autoNextP3(this)">
@@ -372,7 +383,7 @@
                 </label>
                 <label class="opt-card neutral-card">
                     <input type="radio" name="c3_1" value="warm" onclick="autoNextP3(this)">
-                    <img src="images/rich warm.jpeg" alt="Rich Warm" class="neutral-img">
+                    <img src="images/rich warm.png" alt="Rich Warm" class="neutral-img">
                     <span>Rich Warm</span>
                 </label>
             </div>
@@ -380,7 +391,7 @@
 
         <!-- Q2 -->
         <div class="q-block-p3 hidden" data-qp3="2">
-            <p><strong>2. Apa hal tersulit saat kamu memilih warna pakaian? 🤔</strong></p>
+            <p><strong>2. What feels hardest about choosing colors?🤔</strong></p>
             <div class="options-grid">
                 <label class="opt-card"><input type="radio" name="c3_2" value="1" onclick="autoNextP3(this)"> Some colors make me look tired</label>
                 <label class="opt-card"><input type="radio" name="c3_2" value="2" onclick="autoNextP3(this)"> I buy colors but don't wear them</label>
@@ -392,59 +403,59 @@
 
         <!-- Q3 (MULTI) -->
         <div class="q-block-p3 hidden" data-qp3="3">
-            <p><strong>3. Warna apa saja yang biasanya PALING kamu hindari? 🚫 (Pilih satu atau lebih)</strong></p>
+            <p><strong>3. Which colors do you usually avoid the most?🚫 (Choose one or more)</strong></p>
             <div class="options-grid color-swatch-grid">
-                <label class="opt-card"><input type="checkbox" name="c3_3" value="orange"> <span class="color-dot" style="background:orange;"></span> Orange</label>
-                <label class="opt-card"><input type="checkbox" name="c3_3" value="pink"> <span class="color-dot" style="background:pink;"></span> Pink</label>
-                <label class="opt-card"><input type="checkbox" name="c3_3" value="green"> <span class="color-dot" style="background:green;"></span> Green</label>
-                <label class="opt-card"><input type="checkbox" name="c3_3" value="brown"> <span class="color-dot" style="background:saddlebrown;"></span> Brown</label>
-                <label class="opt-card"><input type="checkbox" name="c3_3" value="black"> <span class="color-dot" style="background:black;"></span> Black</label>
-                <label class="opt-card"><input type="checkbox" name="c3_3" value="yellow"> <span class="color-dot" style="background:gold;"></span> Yellow</label>
-                <label class="opt-card"><input type="checkbox" name="c3_3" value="purple"> <span class="color-dot" style="background:purple;"></span> Purple</label>
-                <label class="opt-card"><input type="checkbox" name="c3_3" value="blue"> <span class="color-dot" style="background:blue;"></span> Blue</label>
-                <label class="opt-card"><input type="checkbox" name="c3_3" value="white"> <span class="color-dot" style="background:whitesmoke; border:1px solid #ccc;"></span> White</label>
-                <label class="opt-card"><input type="checkbox" name="c3_3" value="none"> I don't avoid any</label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="orange"> <span class="color-dot" style="background:orange;" aria-hidden="true"></span><span class="swatch-label">Orange</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="pink"> <span class="color-dot" style="background:pink;" aria-hidden="true"></span><span class="swatch-label">Pink</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="green"> <span class="color-dot" style="background:green;" aria-hidden="true"></span><span class="swatch-label">Green</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="brown"> <span class="color-dot" style="background:saddlebrown;" aria-hidden="true"></span><span class="swatch-label">Brown</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="black"> <span class="color-dot" style="background:black;" aria-hidden="true"></span><span class="swatch-label">Black</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="yellow"> <span class="color-dot" style="background:gold;" aria-hidden="true"></span><span class="swatch-label">Yellow</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="purple"> <span class="color-dot" style="background:purple;" aria-hidden="true"></span><span class="swatch-label">Purple</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="blue"> <span class="color-dot" style="background:blue;" aria-hidden="true"></span><span class="swatch-label">Blue</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="white"> <span class="color-dot" style="background:whitesmoke;" aria-hidden="true"></span><span class="swatch-label">White</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="none"> <span class="color-dot neutral-dot" aria-hidden="true">✦</span><span class="swatch-label">I don't avoid any</span></label>
             </div>
             <button class="btn-primary mt-20" onclick="nextP3SubQ(4)">Continue 🚀</button>
         </div>
 
         <!-- Q4 (MULTI) -->
         <div class="q-block-p3 hidden" data-qp3="4">
-            <p><strong>4. Apa tujuan utamamu menggunakan palet warna ini? 🎯 (Pilih satu atau lebih)</strong></p>
+            <p><strong>4. What is your main goal in using this color palette?🎯 (Choose one or more)</strong></p>
             <div class="options-grid">
-                <label class="opt-card"><input type="checkbox" name="c3_4" value="polished"> Tampil lebih profesional & polished</label>
-                <label class="opt-card"><input type="checkbox" name="c3_4" value="fast"> Bangun/mix and match pakaian lebih cepat</label>
-                <label class="opt-card"><input type="checkbox" name="c3_4" value="refresh"> Refresh isi lemari pakaianku</label>
-                <label class="opt-card"><input type="checkbox" name="c3_4" value="hair"> Eksperimen warna rambut baru</label>
+                <label class="opt-card"><input type="checkbox" name="c3_4" value="polished"> Look more polished</label>
+                <label class="opt-card"><input type="checkbox" name="c3_4" value="fast"> Build outfits faster</label>
+                <label class="opt-card"><input type="checkbox" name="c3_4" value="refresh"> Refresh my wardrobe</label>
+                <label class="opt-card"><input type="checkbox" name="c3_4" value="hair"> Try a new hair colors</label>
             </div>
             <button class="btn-primary mt-20" onclick="nextP3SubQ(5)">Continue 🚀</button>
         </div>
 
         <!-- Q5 (MULTI) -->
         <div class="q-block-p3 hidden" data-qp3="5">
-            <p><strong>5. Di mana kamu paling ingin menggunakan palet warna ini? 📍 (Pilih satu atau lebih)</strong></p>
+            <p><strong>5. Where do you most want to use this color palette?📍 (Choose one or more)</strong></p>
             <div class="options-grid">
-                <label class="opt-card"><input type="checkbox" name="c3_5" value="daily"> Outfit sehari-hari / casual</label>
-                <label class="opt-card"><input type="checkbox" name="c3_5" value="work"> Kerja / Formal professional looks</label>
-                <label class="opt-card"><input type="checkbox" name="c3_5" value="dates"> Kencan & Acara spesial</label>
-                <label class="opt-card"><input type="checkbox" name="c3_5" value="shop"> Belanja online (biar gak salah beli warna)</label>
+                <label class="opt-card"><input type="checkbox" name="c3_5" value="daily"> Daily wear / Casual</label>
+                <label class="opt-card"><input type="checkbox" name="c3_5" value="work"> Work / professional looks</label>
+                <label class="opt-card"><input type="checkbox" name="c3_5" value="dates"> Dates & events</label>
+                <label class="opt-card"><input type="checkbox" name="c3_5" value="shop"> Online shopping</label>
             </div>
             <button class="btn-primary mt-20" onclick="nextP3SubQ(6)">Continue 🚀</button>
         </div>
 
         <!-- Q6 -->
         <div class="q-block-p3 hidden" data-qp3="6">
-            <p><strong>6. Apakah kamu sering minta pendapat teman saat belanja baju? 👯‍♀️</strong></p>
+            <p><strong>6. I usually seek the opinions of friends when shopping..👯‍♀️</strong></p>
             <div class="options-grid">
-                <label class="opt-card"><input type="radio" name="c3_6" value="1" onclick="autoNextP3Sub(7)"> Sometimes (Kadang-kadang)</label>
-                <label class="opt-card"><input type="radio" name="c3_6" value="2" onclick="autoNextP3Sub(7)"> Often (Sering banget)</label>
-                <label class="opt-card"><input type="radio" name="c3_6" value="3" onclick="autoNextP3Sub(7)"> Never (Pilih sendiri)</label>
+                <label class="opt-card"><input type="radio" name="c3_6" value="1" onclick="autoNextP3Sub(7)"> Sometimes</label>
+                <label class="opt-card"><input type="radio" name="c3_6" value="2" onclick="autoNextP3Sub(7)"> Often</label>
+                <label class="opt-card"><input type="radio" name="c3_6" value="3" onclick="autoNextP3Sub(7)"> Never</label>
             </div>
         </div>
 
         <!-- Q7 -->
         <div class="q-block-p3 hidden" data-qp3="7">
-            <p><strong>7. Saat belanja, apakah kamu sering kesulitan memadukan item pakaian? 🧩</strong></p>
+            <p><strong>7. When shopping, I struggle to combine items and create complete outfits..🧩</strong></p>
             <div class="options-grid">
                 <label class="opt-card"><input type="radio" name="c3_7" value="1" onclick="autoNextP3Sub(8)"> Sometimes</label>
                 <label class="opt-card"><input type="radio" name="c3_7" value="2" onclick="autoNextP3Sub(8)"> Often</label>
@@ -454,12 +465,12 @@
 
         <!-- Q8 -->
         <div class="q-block-p3 hidden" data-qp3="8">
-            <p><strong>8. Apakah kamu ingin panduan shade makeup disertakan? 💄</strong></p>
+            <p><strong>8. Would you like us to include a makeup shade guide? 💄</strong></p>
             <div class="options-grid">
-                <label class="opt-card"><input type="radio" name="c3_8" value="everyday" onclick="finishPhase3()"> Yes, untuk everyday makeup</label>
-                <label class="opt-card"><input type="radio" name="c3_8" value="lips" onclick="finishPhase3()"> Yes, khusus warna lipstick & blush</label>
-                <label class="opt-card"><input type="radio" name="c3_8" value="simple" onclick="finishPhase3()"> Hanya panduan simpel saja</label>
-                <label class="opt-card"><input type="radio" name="c3_8" value="no" onclick="finishPhase3()"> Tidak, fokus warna pakaian saja</label>
+                <label class="opt-card"><input type="radio" name="c3_8" value="everyday" onclick="finishPhase3()"> Yes, for everyday makeup</label>
+                <label class="opt-card"><input type="radio" name="c3_8" value="lips" onclick="finishPhase3()"> Yes, for lipstick & blush colors</label>
+                <label class="opt-card"><input type="radio" name="c3_8" value="simple" onclick="finishPhase3()"> only simple guide</label>
+                <label class="opt-card"><input type="radio" name="c3_8" value="no" onclick="finishPhase3()"> No, focus on clothing colors only</label>
             </div>
         </div>
     </div>
@@ -467,7 +478,8 @@
     <!-- SECTION C6_TRANS: PHASE 3 COMPLETED -->
     <div id="section-color-trans3" class="card hidden fade-in text-center">
         <div class="success-badge">🎯 93% Phase Completed!</div>
-        <p class="cute-msg">"Satu langkah terakhir sebelum report warna personalmu keluar! ✨"</p>
+        <p class="cute-msg">The final touch! We’re bringing every clue together for your personal color story. ✨</p>
+        <div class="beauty-route" aria-label="Beauty journey progress"><div class="route-track"><span class="route-fill route-fill-3"></span></div><div class="route-stops"><div class="route-stop done"><span>♡</span><small>Natural<br>signals</small></div><div class="route-stop done"><span>✧</span><small>Palette<br>direction</small></div><div class="route-stop done"><span>✿</span><small>Your<br>style</small></div><div class="route-stop current"><span>✦</span><small>Color<br>report</small></div></div></div>
         <button class="btn-primary" onclick="goToLoading()">Continue to Final Report 🚀</button>
     </div>
 
@@ -482,11 +494,14 @@
             </div>
         </div>
 
+        <div class="analysis-orbit" aria-hidden="true"><span></span><span></span><span></span><i>✦</i></div>
+        <p class="loading-caption">A little color magic is happening behind the scenes.</p>
         <div class="loading-steps mt-20">
-            <div id="load-step-1" class="load-step">⏳ Matching undertone, hair, eye, & signals...</div>
-            <div id="load-step-2" class="load-step opacity-low">🎨 Reviewing your colors & avoiding list...</div>
-            <div id="load-step-3" class="load-step opacity-low">✨ Preparing your personalized color wheel report...</div>
+            <div id="load-step-1" class="load-step active-load">✦ Reading your natural features <span>0%</span></div>
+            <div id="load-step-2" class="load-step opacity-low">✿ Matching your undertone & contrast <span>0%</span></div>
+            <div id="load-step-3" class="load-step opacity-low">♡ Building your personal color wheel <span>0%</span></div>
         </div>
+        <div class="loading-track"><span id="loading-fill"></span></div>
     </div>
 
     <!-- SECTION C8: COLOR ANALYSIS RESULT REPORT -->
@@ -497,26 +512,30 @@
         <div class="color-report-container">
             <div class="season-badge-main" id="res-season-title">SPRING WARM & BRIGHT 🌸</div>
             
-            <div class="color-wheel-mockup">
-                <div class="wheel-center">YOU 💖</div>
-                <div class="wheel-quadrant spring">SPRING</div>
-                <div class="wheel-quadrant summer">SUMMER</div>
-                <div class="wheel-quadrant autumn">AUTUMN</div>
-                <div class="wheel-quadrant winter">WINTER</div>
+            <div class="season-wheel-wrap">
+                <p class="wheel-kicker">YOUR PERSONAL COLOUR MAP</p>
+                <div class="season-wheel" id="season-wheel" role="img" aria-label="Four season color analysis wheel">
+                    <div class="wheel-season-label spring-label">SPRING<small>fresh · warm</small></div>
+                    <div class="wheel-season-label summer-label">SUMMER<small>soft · cool</small></div>
+                    <div class="wheel-season-label autumn-label">AUTUMN<small>rich · warm</small></div>
+                    <div class="wheel-season-label winter-label">WINTER<small>bold · cool</small></div>
+                    <div class="wheel-center"><span>YOUR</span><strong>colour story</strong><i>✦</i></div>
+                </div>
+                <div class="wheel-legend"><span><i style="background:#f1a9b7"></i>Warm</span><span><i style="background:#9db7dd"></i>Cool</span><span><i style="background:#d9c0e9"></i>Soft</span><span><i style="background:#e6bd62"></i>Bright</span></div>
             </div>
 
             <div class="result-details-box mt-20">
                 <h3>📋 Rangkuman Palette Personalmu:</h3>
-                <ul id="res-color-list" class="custom-list">
-                    <!-- Dinamis via JS -->
-                </ul>
+                <ul id="res-color-list" class="custom-list"><!-- Dinamis via JS --></ul>
+                <div class="palette-display"><p class="palette-label">YOUR BEST COLOURS</p><div id="res-palette-swatches" class="palette-swatches"></div></div>
+                <div class="style-notes"><span>✿</span><p><strong>Little styling note</strong><br><small>Use this palette as a guide, not a rulebook. Your personal style still comes first.</small></p></div>
                 <div id="res-hair-guide-box" class="mt-15 hidden">
                     <p><strong>💇‍♀️ Hair Color Recommendation:</strong> <span id="res-hair-text"></span></p>
                 </div>
             </div>
         </div>
 
-        <button class="btn-primary mt-20" onclick="location.reload()">Ulangi Analisis 🔄</button>
+        <button class="btn-primary mt-20" onclick="location.reload()">Discover another colour story ↗</button>
     </div>
 </div>
 
