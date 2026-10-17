@@ -646,3 +646,184 @@ body[data-theme="berry"] .phase-badge {
 }
 #music-toggle { overflow: hidden; }
 
+/* =========================================
+   TYPOGRAPHY POLISH — YOUR COLOR STORY
+   Mempercantik font tanpa mengubah layout
+   ========================================= */
+
+/* Font utama untuk seluruh teks */
+body,
+button,
+input,
+textarea,
+select {
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* Judul halaman dan pertanyaan */
+.header-title,
+.main-heading,
+.question-title,
+.interstitial-title,
+.phase-badge,
+.success-badge,
+.season-badge-main {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    letter-spacing: -0.35px;
+}
+
+/* Pertanyaan utama */
+.main-heading {
+    line-height: 1.3;
+}
+
+.question-title {
+    line-height: 1.4;
+    font-size: 24px;
+}
+
+/* Pertanyaan dan teks penjelasan di setiap section */
+.q-block > p,
+.q-block-p2 > p,
+.q-block-p3 > p,
+.interstitial-desc,
+.cute-msg,
+.style-notes p,
+.custom-list {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+    letter-spacing: 0.05px;
+}
+
+/* Pilihan jawaban berbentuk kartu */
+.text-opt-card,
+.opt-card,
+.opt-label-bar,
+.options-grid:not(.image-options) .opt-card,
+.check-list li {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.65;
+    letter-spacing: 0.05px;
+}
+
+/* Nama pilihan di bawah gambar */
+.opt-label-bar,
+.options-grid.image-options .opt-card > span {
+    font-weight: 600;
+    letter-spacing: 0.1px;
+}
+
+/* Teks hasil analisis dan rekomendasi */
+.result-details-box,
+.result-details-box p,
+.result-details-box li,
+.hair-choice-confirm,
+.palette-chip span {
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.75;
+}
+
+/* Teks penting di dalam hasil */
+.result-details-box h2,
+.result-details-box h3,
+.result-details-box h4 {
+    font-family: 'Playfair Display', serif;
+    line-height: 1.4;
+}
+
+/* Tema Rose: elegan dan lembut */
+body[data-theme="rose"] .question-title,
+body[data-theme="rose"] .main-heading,
+body[data-theme="rose"] .interstitial-title {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Tema Berry: elegan dengan sentuhan editorial */
+body[data-theme="berry"] .question-title,
+body[data-theme="berry"] .main-heading,
+body[data-theme="berry"] .interstitial-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+body[data-theme="berry"] .q-block > p,
+body[data-theme="berry"] .q-block-p2 > p,
+body[data-theme="berry"] .q-block-p3 > p,
+body[data-theme="berry"] .opt-card,
+body[data-theme="berry"] .opt-label-bar,
+body[data-theme="berry"] .text-opt-card {
+    font-family: 'Nunito', sans-serif;
+}
+
+/* Tetap nyaman dibaca di layar HP */
+@media (max-width: 560px) {
+    .question-title {
+        font-size: 22px;
+    }
+
+    .main-heading {
+        font-size: 27px;
+    }
+
+    .q-block > p,
+    .q-block-p2 > p,
+    .q-block-p3 > p {
+        font-size: 14px;
+    }
+}
+
+/* FIX: Restore posisi tombol Theme & Music di kanan atas */
+.studio-controls {
+    position: fixed !important;
+    top: 18px !important;
+    right: 22px !important;
+    left: auto !important;
+    z-index: 1000 !important;
+
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+
+    width: auto !important;
+    height: auto !important;
+}
+
+/* Bentuk tombol kembali membulat seperti semula */
+.studio-toggle {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    padding: 9px 13px !important;
+
+    border-radius: 999px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+}
+
+/* Tampilan di layar HP */
+@media (max-width: 560px) {
+    .studio-controls {
+        top: 9px !important;
+        right: 9px !important;
+        left: auto !important;
+        gap: 5px !important;
+    }
+
+    .studio-toggle {
+        padding: 8px 10px !important;
+        font-size: 10px !important;
+    }
+}
+
