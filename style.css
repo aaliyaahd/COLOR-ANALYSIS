@@ -827,3 +827,23 @@ body[data-theme="berry"] .text-opt-card {
     }
 }
 
+
+
+/* Final report upgrades: varied palette, modal question, and makeup guide */
+.color-swatch-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important}
+.color-swatch-card{min-height:82px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:7px!important;padding:10px 6px!important;text-align:center!important}
+.color-swatch-card .color-dot{display:block;width:27px;height:27px;border-radius:50%;border:1px solid #00000012;box-shadow:0 2px 6px #30203012}
+.color-swatch-card input{position:absolute;opacity:0;pointer-events:none}
+.color-swatch-card .swatch-label{font-size:11px!important;line-height:1.25!important;padding:0!important}
+.palette-swatches{grid-template-columns:repeat(5,minmax(0,1fr))}
+.beauty-modal{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(35,23,38,.52);backdrop-filter:blur(7px);animation:modalFade .25s ease}
+.beauty-modal.hidden{display:none!important}
+.beauty-modal-card{width:min(100%,420px);padding:30px 25px 25px;text-align:center;border:1px solid #f0dfec;border-radius:27px;background:linear-gradient(145deg,#fffdfd,#fbf0f5);box-shadow:0 24px 80px #24142b40;animation:modalRise .3s ease}
+.modal-sparkle{display:grid;place-items:center;width:48px;height:48px;margin:0 auto 12px;border-radius:50%;background:#f0e3f5;color:#956db4;font-size:25px}
+.modal-eyebrow{font-size:10px;letter-spacing:2px;font-weight:800;color:#a178a0;margin-bottom:8px}
+.beauty-modal-card h2{font:700 27px/1.2 'Playfair Display',serif;color:#49364c;margin-bottom:11px}
+.beauty-modal-card>p:not(.modal-eyebrow){font-size:13px;line-height:1.7;color:#786979;margin-bottom:20px}
+.modal-actions{display:grid;gap:10px}.modal-actions .btn-primary,.modal-actions .btn-secondary{width:100%;margin:0}
+@keyframes modalFade{from{opacity:0}to{opacity:1}}@keyframes modalRise{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+body[data-theme="berry"] .beauty-modal-card{background:linear-gradient(145deg,#34263a,#2b2031);border-color:#634765;color:#fff4fb}body[data-theme="berry"] .beauty-modal-card h2{color:#fff4fb}body[data-theme="berry"] .beauty-modal-card>p:not(.modal-eyebrow){color:#d4c0d3}
+@media(max-width:560px){.color-swatch-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.color-swatch-card{min-height:76px!important}.beauty-modal-card{padding:26px 20px 21px}.beauty-modal-card h2{font-size:24px}.palette-swatches{grid-template-columns:repeat(5,minmax(0,1fr))}}

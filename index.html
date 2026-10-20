@@ -346,6 +346,13 @@
                 <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="lavender"> <span class="color-dot" style="background:#cc99ff;" aria-hidden="true"></span><span class="swatch-label">Lavender</span></label>
                 <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="teal"> <span class="color-dot" style="background:#008080;" aria-hidden="true"></span><span class="swatch-label">Teal</span></label>
                 <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="mustard"> <span class="color-dot" style="background:#ffcc00;" aria-hidden="true"></span><span class="swatch-label">Mustard</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="sage"> <span class="color-dot" style="background:#a8bda0;" aria-hidden="true"></span><span class="swatch-label">Sage</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="lilac"> <span class="color-dot" style="background:#c8a2c8;" aria-hidden="true"></span><span class="swatch-label">Lilac</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="navy"> <span class="color-dot" style="background:#24334e;" aria-hidden="true"></span><span class="swatch-label">Navy</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="cream"> <span class="color-dot" style="background:#eadfc8;" aria-hidden="true"></span><span class="swatch-label">Cream</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="cobalt"> <span class="color-dot" style="background:#2456c5;" aria-hidden="true"></span><span class="swatch-label">Cobalt</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="peach"> <span class="color-dot" style="background:#f4b49c;" aria-hidden="true"></span><span class="swatch-label">Peach</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="charcoal"> <span class="color-dot" style="background:#414047;" aria-hidden="true"></span><span class="swatch-label">Charcoal</span></label>
                 <label class="opt-card color-swatch-card"><input type="checkbox" name="c2_4" value="minimal"> <span class="color-dot neutral-dot" aria-hidden="true">✦</span><span class="swatch-label">None - Keep it minimal</span></label>
             </div>
             <button class="btn-primary mt-20" onclick="finishPhase2()">Continue 🚀</button>
@@ -416,6 +423,13 @@
                 <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="purple"> <span class="color-dot" style="background:purple;" aria-hidden="true"></span><span class="swatch-label">Purple</span></label>
                 <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="blue"> <span class="color-dot" style="background:blue;" aria-hidden="true"></span><span class="swatch-label">Blue</span></label>
                 <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="white"> <span class="color-dot" style="background:whitesmoke;" aria-hidden="true"></span><span class="swatch-label">White</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="red"> <span class="color-dot" style="background:#d74455;" aria-hidden="true"></span><span class="swatch-label">Red</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="navy"> <span class="color-dot" style="background:#24334e;" aria-hidden="true"></span><span class="swatch-label">Navy</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="beige"> <span class="color-dot" style="background:#d8c5a7;" aria-hidden="true"></span><span class="swatch-label">Beige</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="grey"> <span class="color-dot" style="background:#a5a5aa;" aria-hidden="true"></span><span class="swatch-label">Grey</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="teal"> <span class="color-dot" style="background:#168b8b;" aria-hidden="true"></span><span class="swatch-label">Teal</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="pastels"> <span class="color-dot" style="background:#e8cce0;" aria-hidden="true"></span><span class="swatch-label">Pastels</span></label>
+                <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="neon"> <span class="color-dot" style="background:#b5ed35;" aria-hidden="true"></span><span class="swatch-label">Neon</span></label>
                 <label class="opt-card color-swatch-card"><input type="checkbox" name="c3_3" value="none"> <span class="color-dot neutral-dot" aria-hidden="true">✦</span><span class="swatch-label">I don't avoid any</span></label>
             </div>
             <button class="btn-primary mt-20" onclick="nextP3SubQ(4)">Continue 🚀</button>
@@ -488,13 +502,7 @@
     <!-- SECTION C7: LOADING & QUICK REPORT QUESTION -->
     <div id="section-color-loading" class="card hidden fade-in text-center">
         <h2>Analyzing Your Answers... 🔮</h2>
-        <div class="quick-report-box">
-            <p><strong>Quick Report Question:</strong> Would you like us to include a hair color guide? 💇‍♀️</p>
-            <div class="btn-group row-btns">
-                <button class="btn-secondary" onclick="setHairGuide(true)">Yes, Please! ✨</button>
-                <button class="btn-secondary" onclick="setHairGuide(false)">No Thanks</button>
-            </div>
-        </div>
+        <div class="quick-report-box"><p>Your personalized report is being prepared. ✨</p></div>
 
         <div class="analysis-orbit" aria-hidden="true"><span></span><span></span><span></span><i>✦</i></div>
         <p class="loading-caption">A little color magic is happening behind the scenes.</p>
@@ -534,11 +542,25 @@
                 <div id="res-hair-guide-box" class="mt-15 hidden">
                     <p><strong>💇‍♀️ Hair Color Recommendation:</strong> <span id="res-hair-text"></span></p>
                 </div>
+                <div id="res-makeup-guide-box" class="mt-15 hidden">
+                    <p><strong>💄 Your Makeup Shade Guide:</strong> <span id="res-makeup-text"></span></p>
+                </div>
+                <div id="res-preference-box" class="mt-15"><p><strong>🎨 Your color habits:</strong> <span id="res-preference-text"></span></p></div>
             </div>
         </div>
 
         <button class="btn-primary mt-20" onclick="location.reload()">Discover another colour story ↗</button>
     </div>
+</div>
+
+<div id="beauty-modal" class="beauty-modal hidden" role="dialog" aria-modal="true" aria-labelledby="beauty-modal-title">
+  <div class="beauty-modal-card">
+    <span class="modal-sparkle">✧</span>
+    <p class="modal-eyebrow">ONE LAST LITTLE THING</p>
+    <h2 id="beauty-modal-title">Want a hair color recommendation? 💇‍♀️</h2>
+    <p>We can add shades that work with your seasonal palette to your final report.</p>
+    <div class="modal-actions"><button class="btn-primary" onclick="setHairGuide(true)">Yes, add it ✨</button><button class="btn-secondary" onclick="setHairGuide(false)">No, just my color palette</button></div>
+  </div>
 </div>
 
 <script src="script.js"></script>
