@@ -287,6 +287,24 @@ function displayResult(season){
  };
  const d=data[season];showOnly('section-color-result');setTitle('Your Color Result');setProgress(100);
  const title=$('#res-season-title');if(title)title.textContent=d.title;
+
+ // Display the CF value computed by Forward Chaining.
+ let cfBadge = $('#res-cf-result');
+ if (!cfBadge && title) {
+   cfBadge = document.createElement('p');
+   cfBadge.id = 'res-cf-result';
+   cfBadge.style.cssText = 'margin:10px auto 18px;padding:10px 16px;max-width:360px;border-radius:14px;background:rgba(201,135,165,.12);color:inherit;text-align:center;font-weight:700;';
+   title.insertAdjacentElement('afterend', cfBadge);
+ }
+ if (cfBadge) {
+   const analysis = window.lastCFAnalysis;
+   if (analysis && !analysis.usedFallback && analysis.result === season) {
+     cfBadge.textContent = `Certainty Factor (CF): ${analysis.resultCF.toFixed(2)} (${analysis.resultPercent}%)`;
+   } else {
+     cfBadge.textContent = 'Hasil sementara: aturan CF belum menghasilkan nilai untuk ditampilkan.';
+   }
+ }
+
  const avoid=$$('input[name="c3_3"]:checked').map(x=>x.value).filter(x=>x!=='none');
  const accentNames=$$('input[name="c2_4"]:checked').map(x=>x.closest('label')?.querySelector('.swatch-label')?.textContent.trim()).filter(Boolean).filter(x=>!x.startsWith('None'));
  const goals=$$('input[name="c3_4"]:checked').map(x=>({polished:'look more polished',fast:'build outfits faster',refresh:'refresh your wardrobe',hair:'try a new hair color'}[x.value])).filter(Boolean);
