@@ -854,3 +854,37 @@ body[data-theme="berry"] .beauty-modal-card{background:linear-gradient(145deg,#3
 .profile-summary-item{border:1px solid var(--border-card,#eadfe8);background:var(--card-bg,#fffdfc);border-radius:18px;padding:18px 13px;text-align:center;min-width:0}
 .profile-icon{display:block;font-size:24px;margin-bottom:8px}.profile-summary-item small{display:block;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}.profile-summary-item strong{display:block;font-size:15px;line-height:1.3;color:var(--text-primary)}.profile-summary-item p{font-size:12px;line-height:1.45;color:var(--text-muted);margin:8px 0 0}
 @media(max-width:560px){.profile-summary-grid{grid-template-columns:1fr;gap:9px}.profile-summary-item{display:grid;grid-template-columns:34px 1fr;column-gap:8px;text-align:left;padding:13px 15px}.profile-icon{grid-row:span 2;margin:0;align-self:center}.profile-summary-item small{margin-bottom:3px}.profile-summary-item p{margin-top:4px}}
+
+
+/* Accessibility polish for the Berry Night (dark) theme and final color profile */
+body[data-theme="berry"] .profile-summary-item,
+body[data-theme="berry"] .result-details-box,
+body[data-theme="berry"] .palette-display {
+  background: #302437;
+  color: #fff4fb;
+  border-color: #604866;
+}
+body[data-theme="berry"] .profile-summary-item small,
+body[data-theme="berry"] .profile-summary-item p,
+body[data-theme="berry"] .profile-intro,
+body[data-theme="berry"] .wheel-kicker,
+body[data-theme="berry"] .palette-label,
+body[data-theme="berry"] .palette-chip span,
+body[data-theme="berry"] .result-details-box li,
+body[data-theme="berry"] .result-details-box h3 {
+  color: #f0deed !important;
+}
+body[data-theme="berry"] .profile-summary-item strong { color: #fff8fd !important; }
+body[data-theme="berry"] .wheel-season-label { color: #fff8fd !important; text-shadow: 0 1px 5px #211725; }
+body[data-theme="berry"] .wheel-center { background: #302437; color: #fff4fb; }
+body[data-theme="berry"] .wheel-center span,
+body[data-theme="berry"] .wheel-center strong { color: #fff4fb; }
+body[data-theme="berry"] .style-notes,
+body[data-theme="berry"] .hair-guide-box,
+body[data-theme="berry"] .makeup-guide-box { color: #fff4fb; }
+body[data-theme="berry"] .style-notes small { color: #f0deed !important; }
+body[data-theme="berry"] .cf-result-badge { color: #fff4fb !important; background: #493249 !important; border: 1px solid #73516f; }
+body[data-theme="berry"] .season-badge-main { color: #fff4fb !important; }
+body[data-theme="berry"] .palette-chip i { border-color: #7c637e; }
+body[data-theme="berry"] .options-grid.color-swatch-grid .opt-card.color-swatch-card { color: #fff4fb; }
+.profile-intro { color: var(--text-muted); max-width: 560px; margin: 0 auto 14px; line-height: 1.55; font-size: 13px; }

@@ -338,3 +338,18 @@ function playSoftNote(){if(!musicContext||!musicOn)return;const notes=[659.25,78
 function toggleMusic(){musicOn=!musicOn;if(musicOn){try{const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)throw new Error('Audio unavailable');musicContext=musicContext||new Ctx();musicContext.resume();playSoftNote();musicTimer=setInterval(playSoftNote,300);}catch(e){musicOn=false;alert('Audio belum didukung browser ini. Coba gunakan browser terbaru ya!');}}else{if(musicTimer)clearInterval(musicTimer);musicTimer=null;if(musicContext)musicContext.suspend();}const label=$('#music-label'),icon=$('#music-icon'),btn=$('#music-toggle');if(label)label.textContent=musicOn?'Music on':'Music off';if(icon)icon.textContent=musicOn?'♫':'♪';if(btn)btn.setAttribute('aria-pressed',String(musicOn));}
 // Keep the option cards visually selected, including multi-select options.
 document.addEventListener('change',e=>{if(e.target.matches('.opt-card input,.image-opt-card input')){const label=e.target.closest('label');if(label&&e.target.type==='radio'){const group=e.target.name;$$(`input[name="${CSS.escape(group)}"]`).forEach(r=>r.closest('label')?.classList.toggle('selected',r.checked))}else if(label){label.classList.toggle('selected',e.target.checked)}}});
+
+
+// Keep the "none" choice exclusive while allowing any combination of actual colors.
+document.addEventListener('change', function (event) {
+  const input = event.target;
+  if (!(input instanceof HTMLInputElement) || input.type !== 'checkbox') return;
+  if (!['c2_4', 'c3_3'].includes(input.name)) return;
+  const group = Array.from(document.querySelectorAll(`input[name="${input.name}"]`));
+  const noneValues = input.name === 'c2_4' ? ['minimal'] : ['none'];
+  if (noneValues.includes(input.value) && input.checked) {
+    group.forEach(other => { if (other !== input) other.checked = false; });
+  } else if (input.checked) {
+    group.filter(other => noneValues.includes(other.value)).forEach(other => { other.checked = false; });
+  }
+});
