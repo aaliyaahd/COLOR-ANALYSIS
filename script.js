@@ -334,8 +334,36 @@ function displayResult(season){
 function selectedValue(name){return document.querySelector(`input[name="${name}"]:checked`)?.value||'';}
 function toggleTheme(){const next=document.body.dataset.theme==='rose'?'berry':'rose';document.body.dataset.theme=next;const label=$('#theme-label');if(label)label.textContent=next==='rose'?'Berry night':'Rose studio';const icon=$('#theme-toggle .control-icon');if(icon)icon.textContent=next==='rose'?'☾':'✿';}
 let musicContext=null,musicTimer=null,musicOn=false,musicStep=0;
-function playSoftNote(){if(!musicContext||!musicOn)return;const notes=[659.25,783.99,987.77,783.99,880,1046.5,1174.66,1046.5,783.99,987.77,1174.66,1318.51,1174.66,1046.5,987.77,880,783.99,1046.5,1318.51,1567.98,1318.51,1174.66,1046.5,987.77];const now=musicContext.currentTime;const osc=musicContext.createOscillator(),gain=musicContext.createGain();osc.type='triangle';osc.frequency.value=notes[musicStep%notes.length];gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.035,now+.025);gain.gain.exponentialRampToValueAtTime(.0001,now+.28);osc.connect(gain);gain.connect(musicContext.destination);osc.start(now);osc.stop(now+.31);musicStep++;}
-function toggleMusic(){musicOn=!musicOn;if(musicOn){try{const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)throw new Error('Audio unavailable');musicContext=musicContext||new Ctx();musicContext.resume();playSoftNote();musicTimer=setInterval(playSoftNote,300);}catch(e){musicOn=false;alert('Audio belum didukung browser ini. Coba gunakan browser terbaru ya!');}}else{if(musicTimer)clearInterval(musicTimer);musicTimer=null;if(musicContext)musicContext.suspend();}const label=$('#music-label'),icon=$('#music-icon'),btn=$('#music-toggle');if(label)label.textContent=musicOn?'Music on':'Music off';if(icon)icon.textContent=musicOn?'♫':'♪';if(btn)btn.setAttribute('aria-pressed',String(musicOn));}
+// A brighter, upbeat little synth loop (no external audio file required).
+function playSoftNote(){
+ if(!musicContext||!musicOn)return;
+ const notes=[784,988,1175,1568,1397,1175,988,1175,880,1109,1319,1760,1568,1319,1109,1319,988,1175,1480,1760,1568,1480,1175,988];
+ const now=musicContext.currentTime;
+ const play=(freq,type,volume,duration,delay=0)=>{
+   const osc=musicContext.createOscillator(),gain=musicContext.createGain();
+   osc.type=type;osc.frequency.setValueAtTime(freq,now+delay);
+   gain.gain.setValueAtTime(.0001,now+delay);
+   gain.gain.exponentialRampToValueAtTime(volume,now+delay+.015);
+   gain.gain.exponentialRampToValueAtTime(.0001,now+delay+duration);
+   osc.connect(gain);gain.connect(musicContext.destination);
+   osc.start(now+delay);osc.stop(now+delay+duration+.02);
+ };
+ const n=notes[musicStep%notes.length];
+ play(n,'triangle',.045,.19);
+ // Add a soft harmony on alternating beats for a fuller, more playful feel.
+ if(musicStep%2===0)play(n/2,'sine',.018,.24);
+ if(musicStep%4===0){const chords=[523.25,659.25,783.99,587.33,739.99,880,493.88,659.25];play(chords[(musicStep/4)%chords.length],'sine',.014,.32,.015);}
+ musicStep++;
+}
+function toggleMusic(){
+ musicOn=!musicOn;
+ if(musicOn){
+   try{const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)throw new Error('Audio unavailable');musicContext=musicContext||new Ctx();musicContext.resume();playSoftNote();musicTimer=setInterval(playSoftNote,220);}
+   catch(e){musicOn=false;alert('Audio belum didukung browser ini. Coba gunakan browser terbaru ya!');}
+ }else{if(musicTimer)clearInterval(musicTimer);musicTimer=null;if(musicContext)musicContext.suspend();}
+ const label=$('#music-label'),icon=$('#music-icon'),btn=$('#music-toggle');
+ if(label)label.textContent=musicOn?'Music on':'Music off';if(icon)icon.textContent=musicOn?'♫':'♪';if(btn)btn.setAttribute('aria-pressed',String(musicOn));
+}
 // Keep the option cards visually selected, including multi-select options.
 document.addEventListener('change',e=>{if(e.target.matches('.opt-card input,.image-opt-card input')){const label=e.target.closest('label');if(label&&e.target.type==='radio'){const group=e.target.name;$$(`input[name="${CSS.escape(group)}"]`).forEach(r=>r.closest('label')?.classList.toggle('selected',r.checked))}else if(label){label.classList.toggle('selected',e.target.checked)}}});
 
