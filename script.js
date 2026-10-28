@@ -71,211 +71,39 @@ function runAnalysisLoading(){
  */
 
 function calculateColorAnalysis() {
-  const selected = (name) =>
-    document.querySelector(`input[name="${name}"]:checked`)?.value || "";
-
-  // 1. Mengumpulkan fakta dari jawaban pengguna
+  const selected = (name) => document.querySelector(`input[name="${name}"]:checked`)?.value || "";
+  // Natural clues and reported color responses inform the season. Style preferences personalize advice only.
   const facts = {
-    eye: selected("c_eye"),
-    hair: selected("c_hair"),
-    skin: selected("c_skin"),
-    sun: selected("c_sun"),
-    vein: selected("c_vein"),
-    white: selected("c_white"),
-    metal: selected("c2_1"),
-    mood: selected("c2_2"),
-    glow: selected("c2_3"),
-    palette: selected("c3_1"),
-    preferredFeel: selected("c3_8")
+    eye:selected("c_eye"), hair:selected("c_hair"), skin:selected("c_skin"),
+    sun:selected("c_sun"), vein:selected("c_vein"), white:selected("c_white"),
+    blackReaction:selected("c2_1"), glow:selected("c2_3"),
+    styleMood:selected("c2_2"), preferredNeutral:selected("c3_1"), preferredFeel:selected("c3_8")
   };
-
-  // 2. Menentukan undertone berdasarkan indikator yang relevan
-  const votes = [
-    facts.sun,
-    facts.vein,
-    facts.white,
-    facts.metal
-  ].filter(value => value === "warm" || value === "cool");
-
-  const warmVotes = votes.filter(value => value === "warm").length;
-  const coolVotes = votes.filter(value => value === "cool").length;
-
-  const undertone =
-    warmVotes > coolVotes ? "warm" :
-    coolVotes > warmVotes ? "cool" :
-    "uncertain";
-
-  // 3. Forward Chaining: mencocokkan fakta dengan aturan
-  const firedRules = [];
-
-  // R1-R4: aturan undertone
-  if (undertone === "warm") {
-    firedRules.push({
-      id: "R1", season: "spring", cf: 0.6,
-      evidence: "Warm undertone"
-    });
-    firedRules.push({
-      id: "R2", season: "autumn", cf: 0.8,
-      evidence: "Warm undertone"
-    });
+  // Sun response, vein appearance and white/cream comparison are the undertone clues.
+  // The black question is kept as a separate color-response observation; looking tired in black
+  // must not be mistaken for having a warm undertone.
+  const votes=[facts.sun,facts.vein,facts.white].filter(v=>v==="warm"||v==="cool");
+  const warmVotes=votes.filter(v=>v==="warm").length, coolVotes=votes.filter(v=>v==="cool").length;
+  const undertone=warmVotes>coolVotes?"warm":coolVotes>warmVotes?"cool":"uncertain";
+  const firedRules=[];
+  if(undertone==="warm"){firedRules.push({id:"R1",season:"spring",cf:0.6,evidence:"Warm-leaning natural/color-response clues"},{id:"R2",season:"autumn",cf:0.8,evidence:"Warm-leaning natural/color-response clues"});}
+  if(undertone==="cool"){firedRules.push({id:"R3",season:"summer",cf:0.8,evidence:"Cool-leaning natural/color-response clues"},{id:"R4",season:"winter",cf:0.6,evidence:"Cool-leaning natural/color-response clues"});}
+  // This question asks which colors appear flattering, unlike questions about preferred personal style.
+  const observedFeel=facts.glow;
+  if(observedFeel==="bright") firedRules.push({id:"R5",season:"winter",cf:0.55,evidence:"Reported bright/clear colors look flattering"});
+  if(observedFeel==="soft") firedRules.push({id:"R6",season:"summer",cf:0.55,evidence:"Reported soft/muted colors look flattering"});
+  if(observedFeel==="warm") firedRules.push({id:"R7",season:"autumn",cf:0.55,evidence:"Reported warm/earthy colors look flattering"});
+  if(observedFeel==="cool") firedRules.push({id:"R8",season:"winter",cf:0.5,evidence:"Reported cool/defined colors look flattering"});
+  const seasons=["spring","summer","autumn","winter"], combinedCF={spring:0,summer:0,autumn:0,winter:0}, seasonRules={spring:[],summer:[],autumn:[],winter:[]};
+  firedRules.forEach(rule=>{const prev=combinedCF[rule.season];combinedCF[rule.season]=prev===0?rule.cf:prev+rule.cf*(1-prev);seasonRules[rule.season].push(rule.id);});
+  const maxCF=Math.max(...Object.values(combinedCF)); let candidates=seasons.filter(season=>Math.abs(combinedCF[season]-maxCF)<1e-9), season;
+  if(maxCF>0){candidates.sort((a,b)=>seasonRules[b].length-seasonRules[a].length);season=candidates[0];}
+  else {
+    const map={eye:{warm:"autumn",cool:"winter",neutral:"summer"},hair:{warm:"autumn",cool:"winter",neutral:"summer"},skin:{fair:"spring",medium:"summer",tan:"autumn",deep:"winter",neutral:"summer"}};
+    const results=[map.eye[facts.eye],map.hair[facts.hair],map.skin[facts.skin]].filter(Boolean), counts={spring:0,summer:0,autumn:0,winter:0};results.forEach(r=>counts[r]++);
+    season=seasons.reduce((best,current)=>counts[current]>counts[best]?current:best,"spring");
   }
-
-  if (undertone === "cool") {
-    firedRules.push({
-      id: "R3", season: "summer", cf: 0.8,
-      evidence: "Cool undertone"
-    });
-    firedRules.push({
-      id: "R4", season: "winter", cf: 0.6,
-      evidence: "Cool undertone"
-    });
-  }
-
-  // R5-R8: aturan karakteristik palet
-  const brightEvidence =
-    facts.mood === "bright" || facts.palette === "bright" || facts.preferredFeel === "bright";
-
-  const softEvidence =
-    facts.mood === "soft" || facts.palette === "soft" || facts.preferredFeel === "soft";
-
-  const deepEvidence =
-    facts.mood === "deep" || facts.palette === "warm" || facts.preferredFeel === "deep";
-
-  const lightEvidence = facts.palette === "light" || facts.preferredFeel === "light";
-
-  if (brightEvidence) {
-    firedRules.push({
-      id: "R5", season: "winter", cf: 0.9,
-      evidence: "Bright / high contrast"
-    });
-  }
-
-  if (softEvidence) {
-    firedRules.push({
-      id: "R6", season: "summer", cf: 0.8,
-      evidence: "Soft / muted"
-    });
-  }
-
-  if (deepEvidence) {
-    firedRules.push({
-      id: "R7", season: "autumn", cf: 0.9,
-      evidence: "Deep / rich"
-    });
-  }
-
-  if (lightEvidence) {
-    firedRules.push({
-      id: "R8", season: "spring", cf: 0.8,
-      evidence: "Light / fresh"
-    });
-  }
-
-  // 4. Menggabungkan CF untuk setiap musim
-  // CFcombine = CF1 + CF2 * (1 - CF1)
-  const combinedCF = {
-    spring: 0,
-    summer: 0,
-    autumn: 0,
-    winter: 0
-  };
-
-  const seasonRules = {
-    spring: [],
-    summer: [],
-    autumn: [],
-    winter: []
-  };
-
-  firedRules.forEach(rule => {
-    const previousCF = combinedCF[rule.season];
-
-    combinedCF[rule.season] =
-      previousCF === 0
-        ? rule.cf
-        : previousCF + rule.cf * (1 - previousCF);
-
-    seasonRules[rule.season].push(rule.id);
-  });
-
-  // 5. Menentukan musim dengan CF tertinggi
-  const seasons = ["spring", "summer", "autumn", "winter"];
-
-  const maxCF = Math.max(...Object.values(combinedCF));
-
-  let candidates = seasons.filter(
-    season => Math.abs(combinedCF[season] - maxCF) < 1e-9
-  );
-
-  let season;
-
-  if (maxCF > 0) {
-    // Jika CF sama, utamakan musim dengan lebih banyak aturan aktif.
-    candidates.sort((a, b) =>
-      seasonRules[b].length - seasonRules[a].length
-    );
-
-    season = candidates[0];
-  } else {
-    // Fallback jika tidak ada aturan CF yang aktif.
-    // Hasil fallback bukan hasil perhitungan CF.
-    const fallbackMap = {
-      eye: {
-        warm: "autumn",
-        cool: "winter",
-        neutral: "summer"
-      },
-      hair: {
-        warm: "autumn",
-        cool: "winter",
-        neutral: "summer"
-      },
-      skin: {
-        fair: "spring",
-        medium: "summer",
-        tan: "autumn",
-        deep: "winter",
-        neutral: "summer"
-      }
-    };
-
-    const fallbackResults = [
-      fallbackMap.eye[facts.eye],
-      fallbackMap.hair[facts.hair],
-      fallbackMap.skin[facts.skin]
-    ].filter(Boolean);
-
-    const counts = {
-      spring: 0,
-      summer: 0,
-      autumn: 0,
-      winter: 0
-    };
-
-    fallbackResults.forEach(result => counts[result]++);
-
-    season = seasons.reduce((best, current) =>
-      counts[current] > counts[best] ? current : best
-    , "spring");
-  }
-
-  // 6. Simpan jejak perhitungan untuk pengujian
-  window.lastCFAnalysis = {
-    method: "Forward Chaining + Certainty Factor",
-    facts,
-    undertone,
-    warmVotes,
-    coolVotes,
-    firedRules,
-    seasonRules,
-    combinedCF: { ...combinedCF },
-    result: season,
-    resultCF: combinedCF[season],
-    resultPercent: Math.round(combinedCF[season] * 100),
-    usedFallback: maxCF === 0
-  };
-
-  // 7. Tampilkan hasil menggunakan fungsi website yang sudah ada
+  window.lastCFAnalysis={method:"Forward Chaining + Certainty Factor",facts,undertone,warmVotes,coolVotes,firedRules,seasonRules,combinedCF:{...combinedCF},result:season,resultCF:combinedCF[season],resultPercent:Math.round(combinedCF[season]*100),usedFallback:maxCF===0,note:"Season scoring excludes personal style preferences; those personalize the styling advice only."};
   displayResult(season);
 }
 
@@ -302,16 +130,18 @@ function displayResult(season){
    if (analysis && !analysis.usedFallback && analysis.result === season) {
      cfBadge.textContent = `Certainty Factor (CF): ${analysis.resultCF.toFixed(2)} (${analysis.resultPercent}%)`;
    } else {
-     cfBadge.textContent = 'Hasil sementara: aturan CF belum menghasilkan nilai untuk ditampilkan.';
+     cfBadge.textContent = 'Estimated from natural clues; no CF rule was activated.';
    }
  }
+ const rulesNote=$('#res-rules-note');
+ if(rulesNote){const active=window.lastCFAnalysis?.firedRules||[];rulesNote.textContent=active.length?`Rules applied: ${active.map(rule=>rule.id).join(', ')}. The CF values from the applicable rules are combined to compare seasonal directions.`:'No seasonal rule matched these answers, so the website used its natural-feature fallback.';}
 
  const avoid=$$('input[name="c3_3"]:checked').map(x=>x.value).filter(x=>x!=='none');
  const accentNames=$$('input[name="c2_4"]:checked').map(x=>x.closest('label')?.querySelector('.swatch-label')?.textContent.trim()).filter(Boolean).filter(x=>!x.startsWith('None'));
  const goals=$$('input[name="c3_4"]:checked').map(x=>({polished:'look more polished',fast:'build outfits faster',refresh:'refresh your wardrobe',hair:'try a new hair color'}[x.value])).filter(Boolean);
  const problem=selectedValue('c3_2');
  const colorReaction=selectedValue('c3_9');
- const list=$('#res-color-list');if(list)list.innerHTML=`<li>${d.desc}</li><li><strong>Best colour direction:</strong> ${d.title.split('·')[1].trim()}.</li><li><strong>Colours to try less often:</strong> ${d.avoid}.</li>${accentNames.length?`<li><strong>Accent colours you like:</strong> ${accentNames.join(', ')}. Use these as personal preferences, then compare their undertones with your palette.</li>`:''}${avoid.length?`<li><strong>Colours you said you avoid:</strong> ${avoid.join(', ')}. You don't need to ban them; try softer, darker or more muted versions before ruling them out.</li>`:''}${goals.length?`<li><strong>Your styling goals:</strong> ${goals.join(', ')}. Start with two palette colors and one neutral so the recommendations are practical.</li>`:''}${problem?`<li><strong>Your main color challenge:</strong> ${({'1':'some colors make you look tired','2':"you buy colors but don't wear them",'3':'you mostly wear black clothes','4':"matching colors with your hair and eyes",'5':'getting clear, practical guidance'})[problem]||'finding colors that feel right'}.</li>`:''}${colorReaction&&colorReaction!=='unsure'?`<li><strong>What you notice:</strong> ${colorReaction==='tired'?'Some colors can make your face look tired or uneven.':colorReaction==='color-first'?'Some colors may stand out more than your face.':'You do not notice a big difference yet.'}</li>`:''}`;
+ const list=$('#res-color-list');if(list)list.innerHTML=`<li><strong>Color direction:</strong> ${d.title.split('·')[1].trim()}.</li><li><strong>Try less often near your face:</strong> ${d.avoid}.</li>${accentNames.length?`<li><strong>Your style picks:</strong> ${accentNames.slice(0,6).join(', ')}${accentNames.length>6?' and more':''}. These are personal favorites, not evidence used to choose your season.</li>`:''}${goals.length?`<li><strong>Style tip:</strong> ${goals.join(', ')} — start with two palette colors and one neutral.</li>`:''}${problem?`<li><strong>Your focus:</strong> ${{'1':'notice which shades make your face look tired','2':"make outfits easier to repeat",'3':'find alternatives to all-black outfits','4':"coordinate colors with your hair and eyes",'5':'build a simple, practical color guide'}[problem]||'finding colors that feel right'}.</li>`:''}`;
  const swatches=$('#res-palette-swatches');if(swatches)swatches.innerHTML=d.palette.map(([name,color])=>`<div class="palette-chip"><i style="background:${color}" title="${name}"></i><span>${name}</span></div>`).join('');
  const hair=$('#res-hair-text');if(hair)hair.textContent=d.guide;const hairBox=$('#res-hair-guide-box');if(hairBox)hairBox.classList.toggle('hidden',window.includeHairGuide!==true);
  const makeupChoice=selectedValue('c3_10');const makeupBox=$('#res-makeup-guide-box'),makeupText=$('#res-makeup-text');
@@ -321,9 +151,9 @@ function displayResult(season){
  const profileUndertone=$('#profile-undertone'), profileUndertoneNote=$('#profile-undertone-note');
  const profileFeel=$('#profile-feel'), profileFeelNote=$('#profile-feel-note');
  const profileContrast=$('#profile-contrast'), profileContrastNote=$('#profile-contrast-note');
- const metal=selectedValue('c2_1');
- if(profileUndertone){profileUndertone.textContent=metal==='warm'?'Warm-leaning':metal==='cool'?'Cool-leaning':'Still exploring';}
- if(profileUndertoneNote){profileUndertoneNote.textContent=metal==='warm'?'Your black-color answer suggests softer warmth may feel easier.':metal==='cool'?'You said black can look defined on you.':'Your answers do not point clearly one way yet.';}
+ const analysisProfile=window.lastCFAnalysis;
+ if(profileUndertone){profileUndertone.textContent=analysisProfile?.undertone==='warm'?'Warm-leaning':analysisProfile?.undertone==='cool'?'Cool-leaning':'Balanced / unclear';}
+ if(profileUndertoneNote){profileUndertoneNote.textContent=analysisProfile?.undertone==='warm'?'Several clues lean warm.':analysisProfile?.undertone==='cool'?'Several clues lean cool.':'Your selected clues are mixed; compare colors in daylight.';}
  const feel=selectedValue('c3_8');
  const feelLabels={bright:'Clear & lively',soft:'Soft & blended',deep:'Deep & bold',light:'Light & fresh',unsure:'Still exploring'};
  if(profileFeel){profileFeel.textContent=feelLabels[feel]||({spring:'Fresh & lively',summer:'Soft & gentle',autumn:'Earthy & rich',winter:'Bold & crisp'}[season]);}
@@ -331,6 +161,27 @@ function displayResult(season){
  if(profileContrast){profileContrast.textContent=season==='winter'?'More defined':season==='summer'?'Gentle & blended':season==='autumn'?'Warm & grounded':'Fresh & balanced';}
  if(profileContrastNote){profileContrastNote.textContent='Try the suggested shades near your face and see what you notice.';}
 }
+function downloadColorStory(){
+ const analysis=window.lastCFAnalysis, seasonTitle=$('#res-season-title')?.textContent||'Your Color Story';
+ const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext('2d');
+ const berry=document.body.dataset.theme==='berry',bg=berry?'#271e2d':'#fbf7f5',ink=berry?'#fff4fb':'#332a35',muted=berry?'#ddcbdc':'#786c7c';
+ ctx.fillStyle=bg;ctx.fillRect(0,0,1080,1350);ctx.fillStyle=berry?'#493249':'#f0e5f0';ctx.beginPath();ctx.arc(980,80,230,0,Math.PI*2);ctx.fill();ctx.fillStyle=berry?'#402735':'#f8e8e7';ctx.beginPath();ctx.arc(80,1260,210,0,Math.PI*2);ctx.fill();
+ ctx.textAlign='left';ctx.fillStyle=muted;ctx.font='600 25px Arial';ctx.fillText('YOUR COLOR STORY',80,100);ctx.fillStyle=ink;ctx.font='bold 54px Georgia';wrapCanvasText(ctx,seasonTitle,80,185,900,66);ctx.fillStyle=muted;ctx.font='26px Arial';ctx.fillText('Your seasonal palette • a guide, not a rulebook',80,280);
+ const chips=$$('#res-palette-swatches .palette-chip').slice(0,15),startY=355,cols=5,cardW=174,cardH=205,gap=18;
+ chips.forEach((chip,i)=>{const x=80+(i%cols)*(cardW+gap),y=startY+Math.floor(i/cols)*(cardH+gap),name=chip.querySelector('span')?.textContent||'',color=chip.querySelector('i')?.style.backgroundColor||'#ddd';ctx.fillStyle=berry?'#382b40':'#fffdfc';roundRect(ctx,x,y,cardW,cardH,18);ctx.fill();ctx.strokeStyle=berry?'#604866':'#eadfe8';ctx.stroke();ctx.fillStyle=color;roundRect(ctx,x+15,y+15,cardW-30,105,13);ctx.fill();ctx.fillStyle=ink;ctx.font='bold 20px Arial';wrapCanvasText(ctx,name,x+14,y+148,cardW-28,25);});
+ const score=analysis&&!analysis.usedFallback?`CF support value: ${analysis.resultCF.toFixed(2)} (${analysis.resultPercent}%)`:'A result was estimated from available clues; no CF rule was activated.';ctx.fillStyle=ink;ctx.font='bold 25px Arial';ctx.fillText(score,80,1090);ctx.fillStyle=muted;ctx.font='22px Arial';wrapCanvasText(ctx,'Natural clues and color-response answers inform the seasonal result. Personal style preferences shape the styling tips, not the season score.',80,1140,900,32);ctx.fillStyle=muted;ctx.font='20px Arial';ctx.fillText('Made with Your Color Story',80,1295);
+ const link=document.createElement('a');link.download='your-color-story-palette.png';link.href=canvas.toDataURL('image/png');link.click();
+}
+function wrapCanvasText(ctx,text,x,y,maxWidth,lineHeight){const words=String(text).split(' ');let line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){ctx.fillText(line,x,y);line=word;y+=lineHeight;}else line=test;}if(line)ctx.fillText(line,x,y);}
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+async function shareColorStory(){
+ const season=$('#res-season-title')?.textContent||'my seasonal palette',palette=$$('#res-palette-swatches .palette-chip').slice(0,8).map(chip=>chip.querySelector('span')?.textContent).filter(Boolean).join(', ');
+ const message=`My Your Color Story result: ${season}.\nPalette colors: ${palette}.\nThe result is a guide based on natural clues and color responses; personal style helps tailor the styling tips.`;
+ if(navigator.share){try{await navigator.share({title:'My Your Color Story result',text:message,url:location.href});return;}catch(error){if(error.name==='AbortError')return;}}
+ try{await navigator.clipboard.writeText(message);showShareFeedback('Result copied — paste it into a message or post.');}catch(error){window.prompt('Copy your result:',message);}
+}
+function showShareFeedback(message){let note=$('#share-feedback');if(!note){note=document.createElement('p');note.id='share-feedback';note.className='share-feedback';$('.result-actions')?.insertAdjacentElement('afterend',note);}if(note)note.textContent=message;}
+
 function selectedValue(name){return document.querySelector(`input[name="${name}"]:checked`)?.value||'';}
 function toggleTheme(){const next=document.body.dataset.theme==='rose'?'berry':'rose';document.body.dataset.theme=next;const label=$('#theme-label');if(label)label.textContent=next==='rose'?'Berry night':'Rose studio';const icon=$('#theme-toggle .control-icon');if(icon)icon.textContent=next==='rose'?'☾':'✿';}
 let musicContext=null,musicTimer=null,musicOn=false,musicStep=0;

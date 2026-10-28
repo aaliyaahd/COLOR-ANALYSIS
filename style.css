@@ -933,3 +933,45 @@ body[data-theme="berry"] .season-compare-heading>p:last-child,body[data-theme="b
  .season-badge-main{font-size:clamp(19px,5vw,23px);line-height:1.3;overflow-wrap:anywhere}
  #res-cf-result{max-width:100%!important;box-sizing:border-box;font-size:13px;line-height:1.45}
 }
+
+
+/* Refined final result: visual-first, compact, and mobile-friendly */
+.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:470px;margin:18px auto 14px}
+.result-action-btn{appearance:none;border:1px solid var(--border-card,#eadfe8);background:var(--card-bg,#fffdfc);color:var(--text-primary,#332a35);border-radius:999px;padding:13px 15px;font:700 13px 'DM Sans',sans-serif;cursor:pointer;min-width:0;transition:transform .18s,box-shadow .18s,border-color .18s}
+.result-action-btn:hover{transform:translateY(-1px);box-shadow:0 7px 18px #30203012;border-color:#c6a7d7}
+.result-action-btn.primary-action{background:linear-gradient(110deg,#332a35,#59445d);border-color:transparent;color:#fff}
+.analysis-method-note{display:flex;align-items:flex-start;gap:12px;margin:12px 0 22px;padding:15px 16px;border:1px solid var(--border-card,#eadfe8);border-radius:17px;background:rgba(243,234,250,.55);color:var(--text-primary,#332a35)}
+.method-note-icon{flex:0 0 30px;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:#eadcf4;color:#77558f;font-size:17px}
+.analysis-method-note strong{display:block;font-size:13px;line-height:1.4;margin-bottom:4px}
+.analysis-method-note p{font-size:12px;line-height:1.6;color:var(--text-muted,#786c7c);margin:0}
+.share-feedback{margin:0 auto 14px;text-align:center;font-size:12px;line-height:1.5;color:var(--text-muted,#786c7c)}
+#section-color-result .result-details-box{margin-top:18px}
+#section-color-result .palette-display{margin:10px 0 15px;padding:16px;border-radius:18px;background:rgba(246,239,247,.58);border:1px solid var(--border-card,#eadfe8)}
+#section-color-result .palette-label{font-size:10px;letter-spacing:1.5px;font-weight:800;margin-bottom:12px}
+#section-color-result .palette-swatches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+#section-color-result .palette-chip{min-width:0;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center}
+#section-color-result .palette-chip i{display:block;width:100%;height:58px;border-radius:12px;border:1px solid #5c465c20;box-shadow:0 3px 8px #3020300c}
+#section-color-result .palette-chip span{font-size:11px;line-height:1.3;overflow-wrap:anywhere;color:var(--text-primary,#332a35)}
+#section-color-result #res-color-list{padding-left:19px;margin:15px 0 0}
+#section-color-result #res-color-list li{margin:0 0 8px;line-height:1.55}
+body[data-theme="berry"] .analysis-method-note{background:#382b40;border-color:#604866;color:#fff4fb}
+body[data-theme="berry"] .analysis-method-note p{color:#ead8e8}
+body[data-theme="berry"] .method-note-icon{background:#513951;color:#f7d9eb}
+body[data-theme="berry"] #section-color-result .palette-display{background:#302437;border-color:#604866}
+body[data-theme="berry"] #section-color-result .palette-chip span{color:#fff4fb}
+body[data-theme="berry"] .result-action-btn{background:#382b40;color:#fff4fb;border-color:#604866}
+body[data-theme="berry"] .result-action-btn.primary-action{background:linear-gradient(110deg,#8f547e,#bd769b);color:#fff}
+@media(max-width:560px){
+ .result-actions{grid-template-columns:1fr;gap:8px;margin:15px auto 12px}
+ .result-action-btn{width:100%;padding:13px 14px;font-size:13px}
+ .analysis-method-note{padding:13px;gap:9px;margin-bottom:18px}
+ .analysis-method-note p{font-size:12px}
+ #section-color-result .palette-display{padding:12px!important}
+ #section-color-result .palette-swatches{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px 9px!important}
+ #section-color-result .palette-chip i{height:64px!important;border-radius:11px}
+ #section-color-result .palette-chip span{font-size:11px;line-height:1.3}
+}
+@media print{.studio-controls,.app-header,.top-progress-bar,.result-actions,.btn-primary{display:none!important}body{padding:0;background:#fff!important}.quiz-app-container{box-shadow:none;border:0;max-width:100%;padding:0}.analysis-method-note{break-inside:avoid}}
+
+.rules-note{max-width:540px;margin:-8px auto 15px;text-align:center;font-size:11px;line-height:1.5;color:var(--text-muted,#786c7c)}
+body[data-theme="berry"] .rules-note{color:#ead8e8}
