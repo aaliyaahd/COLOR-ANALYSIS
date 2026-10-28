@@ -311,39 +311,72 @@ function renderResultVisuals(season) {
   document.documentElement.style.setProperty('--season-accent', M.accent);
 }
 
+function wrapText(g, text, maxW) {
+  const lines = []; let line = '';
+  text.split(/\s+/).forEach(w => { const t = line ? line + ' ' + w : w; if (g.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; });
+  if (line) lines.push(line); return lines;
+}
 function buildResultCanvas() {
   const A = window.lastCFAnalysis, M = SEASON_META[A.result];
-  const title = ($('#res-season-title')?.textContent || M.name).replace(/[^\w·&\s-]/g, '').trim();
-  const cols = $$('#res-palette-swatches .palette-chip i').slice(0, 20).map(i => i.style.background);
-  const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H;
-  const g = c.getContext('2d'), serif = "'Playfair Display', Georgia, serif", sans = "'DM Sans', Arial, sans-serif";
-  g.fillStyle = '#fcf7f9'; g.fillRect(0, 0, W, H);
-  g.fillStyle = M.accent; g.fillRect(0, 0, W, 18);
-  g.textAlign = 'center'; g.fillStyle = '#8a7a8a'; g.font = `700 26px ${sans}`; g.fillText('MY COLOR STORY', W / 2, 100);
-  g.fillStyle = '#392b3b'; g.font = `700 74px ${serif}`; g.fillText(title, W / 2, 200);
-  g.fillStyle = M.accent; g.font = `700 40px ${sans}`;
-  g.fillText(A.usedFallback ? 'First guess' : `Certainty Factor ${A.resultCF.toFixed(2)} · ${A.resultPercent}%`, W / 2, 262);
-  const cell = 160, gp = 18, perRow = 5, x0 = (W - (perRow * cell + (perRow - 1) * gp)) / 2;
-  cols.forEach((col, i) => { const x = x0 + (i % perRow) * (cell + gp), y = 320 + Math.floor(i / perRow) * (cell + gp); g.fillStyle = col; g.beginPath(); g.roundRect(x, y, cell, cell, 26); g.fill(); });
-  const by = 320 + Math.ceil(cols.length / perRow) * (cell + gp) + 50;
-  CF_SEASONS.forEach((s, i) => { const y = by + i * 70, v = A.combinedCF[s];
-    g.textAlign = 'left'; g.fillStyle = '#392b3b'; g.font = `600 28px ${sans}`; g.fillText(SEASON_META[s].name, x0, y + 8);
-    g.fillStyle = '#eadce8'; g.beginPath(); g.roundRect(x0 + 170, y - 18, 640, 28, 14); g.fill();
-    if (v > 0) { g.fillStyle = SEASON_META[s].accent; g.beginPath(); g.roundRect(x0 + 170, y - 18, Math.max(28, 640 * v), 28, 14); g.fill(); }
-    g.fillStyle = '#392b3b'; g.fillText(v.toFixed(2), x0 + 830, y + 8); });
-  g.textAlign = 'center'; g.fillStyle = '#a597a5'; g.font = `500 24px ${sans}`; g.fillText('Seasonal Color Analysis · Expert System + Certainty Factor', W / 2, H - 50);
-  return c;
+  const fullTitle = ($('#res-season-title')?.textContent || M.name).replace(/[^\w·&\s-]/g, '').trim();
+  const [name, tagline] = fullTitle.split('·').map(s => s.trim());
+  const chips = $$('#res-palette-swatches .palette-chip').slice(0, 15).map(c => ({ col: c.querySelector('i').style.background, label: c.querySelector('span').textContent }));
+  const sections = [];
+  if (window.includeHairGuide === true && $('#res-hair-text')?.textContent) sections.push(['HAIR COLOR', $('#res-hair-text').textContent]);
+  if (!$('#res-makeup-guide-box')?.classList.contains('hidden') && $('#res-makeup-text')?.textContent) sections.push(['MAKEUP SHADES', $('#res-makeup-text').textContent]);
+  const W = 1080, serif = "'Playfair Display', Georgia, serif", sans = "'DM Sans', Arial, sans-serif";
+  const t = document.createElement('canvas'); t.width = W; t.height = 3000;
+  const g = t.getContext('2d'); g.textAlign = 'center';
+  // header
+  g.fillStyle = M.accent; g.font = `700 24px ${sans}`; g.letterSpacing = '6px'; g.fillText('MY COLOR STORY', W / 2, 130); g.letterSpacing = '0px';
+  g.fillStyle = '#392b3b'; g.font = `700 118px ${serif}`; g.fillText(name || M.name, W / 2, 255);
+  g.fillStyle = '#7b6a7b'; g.font = `italic 500 42px ${serif}`; g.fillText(tagline || '', W / 2, 322);
+  g.fillStyle = M.accent; g.fillRect(W / 2 - 40, 360, 80, 4);
+  // palette grid
+  g.fillStyle = '#8a7a8a'; g.font = `700 22px ${sans}`; g.letterSpacing = '5px'; g.fillText('YOUR BEST COLOURS', W / 2, 432); g.letterSpacing = '0px';
+  const cell = 170, gp = 16, per = 5, x0 = (W - (per * cell + (per - 1) * gp)) / 2; let y = 470;
+  chips.forEach((c, i) => {
+    const x = x0 + (i % per) * (cell + gp), yy = 470 + Math.floor(i / per) * 192;
+    g.save(); g.shadowColor = 'rgba(70,40,70,.18)'; g.shadowBlur = 18; g.shadowOffsetY = 8;
+    g.fillStyle = c.col; g.beginPath(); g.roundRect(x, yy, cell, 124, 30); g.fill(); g.restore();
+    g.strokeStyle = 'rgba(0,0,0,.06)'; g.lineWidth = 2; g.beginPath(); g.roundRect(x, yy, cell, 124, 30); g.stroke();
+    let fs = 22; g.font = `500 ${fs}px ${sans}`; while (g.measureText(c.label).width > cell && fs > 14) { fs--; g.font = `500 ${fs}px ${sans}`; }
+    g.fillStyle = '#6d5d6d'; g.fillText(c.label, x + cell / 2, yy + 124 + 34);
+  });
+  y = 470 + Math.ceil(chips.length / per) * 192 + 20;
+  // hair / makeup cards
+  sections.forEach(([label, text]) => {
+    g.textAlign = 'left'; g.font = `500 30px ${sans}`;
+    const lines = wrapText(g, text, W - 2 * 100 - 80), h = 96 + lines.length * 46 + 30;
+    g.fillStyle = 'rgba(255,255,255,.85)'; g.beginPath(); g.roundRect(100, y, W - 200, h, 34); g.fill();
+    g.strokeStyle = M.accent + '55'; g.lineWidth = 2; g.stroke();
+    g.fillStyle = M.accent; g.beginPath(); g.arc(150, y + 58, 9, 0, 7); g.fill();
+    g.font = `700 22px ${sans}`; g.letterSpacing = '5px'; g.fillText(label, 176, y + 66); g.letterSpacing = '0px';
+    g.fillStyle = '#4b3b4d'; g.font = `500 30px ${sans}`;
+    lines.forEach((l, i) => g.fillText(l, 140, y + 124 + i * 46));
+    y += h + 28;
+  });
+  // footer
+  g.textAlign = 'center'; g.fillStyle = '#a597a5'; g.font = `500 22px ${sans}`; g.fillText('Seasonal Color Analysis', W / 2, y + 56);
+  const H = y + 110, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const f = c.getContext('2d'), bg = f.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#fffafc'); bg.addColorStop(1, '#f6ebf1'); f.fillStyle = bg; f.fillRect(0, 0, W, H);
+  const bar = f.createLinearGradient(0, 0, W, 0); chips.slice(0, 6).forEach((ch, i, a) => bar.addColorStop(i / Math.max(1, a.length - 1), ch.col));
+  f.fillStyle = bar; f.fillRect(0, 0, W, 22);
+  f.drawImage(t, 0, 0); return c;
 }
 function canvasBlob(c) { return new Promise(r => c.toBlob(r, 'image/png')); }
 async function downloadResult() {
   if (!window.lastCFAnalysis) return;
+  await document.fonts?.ready;
   const b = await canvasBlob(buildResultCanvas()), a = document.createElement('a');
   a.href = URL.createObjectURL(b); a.download = `my-color-story-${window.lastCFAnalysis.result}.png`;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1500);
 }
 async function shareResult() {
   const A = window.lastCFAnalysis; if (!A) return;
-  const text = `My seasonal color is ${SEASON_META[A.result].name}${A.usedFallback ? '' : ` (CF ${A.resultCF.toFixed(2)})`} 🎨`;
+  const text = `My seasonal color is ${SEASON_META[A.result].name} 🎨`;
+  await document.fonts?.ready;
   try {
     const file = new File([await canvasBlob(buildResultCanvas())], `my-color-story-${A.result}.png`, { type: 'image/png' });
     if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text, title: 'My Color Story' }); return; }
