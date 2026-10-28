@@ -589,20 +589,19 @@
         <!-- Simulasi Color Wheel Report mirip gambar referensi user -->
         <div class="color-report-container">
             <div class="season-badge-main" id="res-season-title">SPRING WARM & BRIGHT 🌸</div>
-            <p id="res-cf-result" class="cf-result-badge" aria-live="polite" style="margin:10px auto 18px;padding:10px 16px;max-width:360px;border-radius:14px;background:rgba(201,135,165,.12);text-align:center;font-weight:700;">Certainty Factor (CF) will appear here.</p>
-            <p id="res-rules-note" class="rules-note" aria-live="polite"></p>
-            <div class="result-actions" aria-label="Save or share your result">
-                <button class="result-action-btn primary-action" type="button" onclick="downloadColorStory()">↓ Save my palette</button>
-                <button class="result-action-btn" type="button" onclick="shareColorStory()">↗ Share result</button>
-            </div>
-            <div class="analysis-method-note">
-                <span class="method-note-icon">✦</span>
-                <div><strong>How your result is chosen</strong><p>Your season is estimated using the original expert-system rules and Certainty Factor weights, combining natural clues with palette-direction answers. Your wardrobe favorites help personalize the styling tips and outfit suggestions.</p></div>
-            </div>
+            <p id="res-cf-result" class="cf-result-badge" aria-live="polite" style="margin:10px auto 18px;padding:10px 16px;max-width:360px;border-radius:14px;background:rgba(201,135,165,.12);text-align:center;font-weight:700;">Certainty Factor (CF) akan ditampilkan di sini.</p>
             
+            <div class="result-viz">
+                <div id="viz-donut" class="viz-donut"></div>
+                <div id="viz-bars" class="viz-bars" aria-label="Certainty Factor per season"></div>
+                <div id="viz-signals" class="viz-signals"></div>
+                <details class="viz-calc"><summary>See the calculation</summary><div id="viz-calc-body"></div></details>
+                <div id="viz-prefs" class="viz-prefs hidden"></div>
+            </div>
+
             <div class="season-wheel-wrap profile-summary-wrap">
                 <p class="wheel-kicker">YOUR COLOR PROFILE</p>
-                <p class="profile-intro">A visual snapshot of your result. Treat it as a guide to test, not a strict rulebook.</p>
+                <p class="profile-intro">A simple snapshot of the color direction suggested by your answers — not a strict rulebook.</p>
                 <div class="profile-summary-grid" id="profile-summary-grid" aria-live="polite">
                     <div class="profile-summary-item"><span class="profile-icon">☀</span><small>Undertone clue</small><strong id="profile-undertone">Still exploring</strong><p id="profile-undertone-note">Based on your answers</p></div>
                     <div class="profile-summary-item"><span class="profile-icon">🎨</span><small>Color feel</small><strong id="profile-feel">Your season's colors</strong><p id="profile-feel-note">A guide to try</p></div>
@@ -626,9 +625,9 @@
             </section>
 
             <div class="result-details-box mt-20">
-                <h3>✨ Your palette at a glance</h3>
-                <div class="palette-display"><p class="palette-label">YOUR SEASONAL COLOURS</p><div id="res-palette-swatches" class="palette-swatches"></div></div>
-                <ul id="res-color-list" class="custom-list"><!-- Short, personalized notes --></ul>
+                <h3>📋 Your Personal Color Palette Summary:</h3>
+                <details class="notes-fold"><summary>Read your full notes</summary><ul id="res-color-list" class="custom-list"><!-- Dinamis via JS --></ul></details>
+                <div class="palette-display"><p class="palette-label">YOUR BEST COLOURS</p><div id="res-palette-swatches" class="palette-swatches"></div></div>
                 <div class="style-notes"><span>✿</span><p><strong>Little styling note</strong><br><small>Use this palette as a guide, not a rulebook. Your personal style still comes first.</small></p></div>
                 <div id="res-hair-guide-box" class="mt-15 hidden">
                     <p><strong>💇‍♀️ Hair Color Recommendation:</strong> <span id="res-hair-text"></span></p>
@@ -640,6 +639,7 @@
             </div>
         </div>
 
+        <div class="result-actions"><button class="btn-primary" onclick="downloadResult()">Download ⤓</button><button class="btn-secondary" onclick="shareResult()">Share ↗</button></div>
         <button class="btn-primary mt-20" onclick="location.reload()">Discover another colour story ↗</button>
     </div>
 </div>
