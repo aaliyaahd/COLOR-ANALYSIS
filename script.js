@@ -71,39 +71,211 @@ function runAnalysisLoading(){
  */
 
 function calculateColorAnalysis() {
-  const selected = (name) => document.querySelector(`input[name="${name}"]:checked`)?.value || "";
-  // Natural clues and reported color responses inform the season. Style preferences personalize advice only.
+  const selected = (name) =>
+    document.querySelector(`input[name="${name}"]:checked`)?.value || "";
+
+  // 1. Mengumpulkan fakta dari jawaban pengguna
   const facts = {
-    eye:selected("c_eye"), hair:selected("c_hair"), skin:selected("c_skin"),
-    sun:selected("c_sun"), vein:selected("c_vein"), white:selected("c_white"),
-    blackReaction:selected("c2_1"), glow:selected("c2_3"),
-    styleMood:selected("c2_2"), preferredNeutral:selected("c3_1"), preferredFeel:selected("c3_8")
+    eye: selected("c_eye"),
+    hair: selected("c_hair"),
+    skin: selected("c_skin"),
+    sun: selected("c_sun"),
+    vein: selected("c_vein"),
+    white: selected("c_white"),
+    metal: selected("c2_1"),
+    mood: selected("c2_2"),
+    glow: selected("c2_3"),
+    palette: selected("c3_1")
   };
-  // Sun response, vein appearance and white/cream comparison are the undertone clues.
-  // The black question is kept as a separate color-response observation; looking tired in black
-  // must not be mistaken for having a warm undertone.
-  const votes=[facts.sun,facts.vein,facts.white].filter(v=>v==="warm"||v==="cool");
-  const warmVotes=votes.filter(v=>v==="warm").length, coolVotes=votes.filter(v=>v==="cool").length;
-  const undertone=warmVotes>coolVotes?"warm":coolVotes>warmVotes?"cool":"uncertain";
-  const firedRules=[];
-  if(undertone==="warm"){firedRules.push({id:"R1",season:"spring",cf:0.6,evidence:"Warm-leaning natural/color-response clues"},{id:"R2",season:"autumn",cf:0.8,evidence:"Warm-leaning natural/color-response clues"});}
-  if(undertone==="cool"){firedRules.push({id:"R3",season:"summer",cf:0.8,evidence:"Cool-leaning natural/color-response clues"},{id:"R4",season:"winter",cf:0.6,evidence:"Cool-leaning natural/color-response clues"});}
-  // This question asks which colors appear flattering, unlike questions about preferred personal style.
-  const observedFeel=facts.glow;
-  if(observedFeel==="bright") firedRules.push({id:"R5",season:"winter",cf:0.55,evidence:"Reported bright/clear colors look flattering"});
-  if(observedFeel==="soft") firedRules.push({id:"R6",season:"summer",cf:0.55,evidence:"Reported soft/muted colors look flattering"});
-  if(observedFeel==="warm") firedRules.push({id:"R7",season:"autumn",cf:0.55,evidence:"Reported warm/earthy colors look flattering"});
-  if(observedFeel==="cool") firedRules.push({id:"R8",season:"winter",cf:0.5,evidence:"Reported cool/defined colors look flattering"});
-  const seasons=["spring","summer","autumn","winter"], combinedCF={spring:0,summer:0,autumn:0,winter:0}, seasonRules={spring:[],summer:[],autumn:[],winter:[]};
-  firedRules.forEach(rule=>{const prev=combinedCF[rule.season];combinedCF[rule.season]=prev===0?rule.cf:prev+rule.cf*(1-prev);seasonRules[rule.season].push(rule.id);});
-  const maxCF=Math.max(...Object.values(combinedCF)); let candidates=seasons.filter(season=>Math.abs(combinedCF[season]-maxCF)<1e-9), season;
-  if(maxCF>0){candidates.sort((a,b)=>seasonRules[b].length-seasonRules[a].length);season=candidates[0];}
-  else {
-    const map={eye:{warm:"autumn",cool:"winter",neutral:"summer"},hair:{warm:"autumn",cool:"winter",neutral:"summer"},skin:{fair:"spring",medium:"summer",tan:"autumn",deep:"winter",neutral:"summer"}};
-    const results=[map.eye[facts.eye],map.hair[facts.hair],map.skin[facts.skin]].filter(Boolean), counts={spring:0,summer:0,autumn:0,winter:0};results.forEach(r=>counts[r]++);
-    season=seasons.reduce((best,current)=>counts[current]>counts[best]?current:best,"spring");
+
+  // 2. Menentukan undertone berdasarkan indikator yang relevan
+  const votes = [
+    facts.sun,
+    facts.vein,
+    facts.white,
+    facts.metal
+  ].filter(value => value === "warm" || value === "cool");
+
+  const warmVotes = votes.filter(value => value === "warm").length;
+  const coolVotes = votes.filter(value => value === "cool").length;
+
+  const undertone =
+    warmVotes > coolVotes ? "warm" :
+    coolVotes > warmVotes ? "cool" :
+    "uncertain";
+
+  // 3. Forward Chaining: mencocokkan fakta dengan aturan
+  const firedRules = [];
+
+  // R1-R4: aturan undertone
+  if (undertone === "warm") {
+    firedRules.push({
+      id: "R1", season: "spring", cf: 0.6,
+      evidence: "Warm undertone"
+    });
+    firedRules.push({
+      id: "R2", season: "autumn", cf: 0.8,
+      evidence: "Warm undertone"
+    });
   }
-  window.lastCFAnalysis={method:"Forward Chaining + Certainty Factor",facts,undertone,warmVotes,coolVotes,firedRules,seasonRules,combinedCF:{...combinedCF},result:season,resultCF:combinedCF[season],resultPercent:Math.round(combinedCF[season]*100),usedFallback:maxCF===0,note:"Season scoring excludes personal style preferences; those personalize the styling advice only."};
+
+  if (undertone === "cool") {
+    firedRules.push({
+      id: "R3", season: "summer", cf: 0.8,
+      evidence: "Cool undertone"
+    });
+    firedRules.push({
+      id: "R4", season: "winter", cf: 0.6,
+      evidence: "Cool undertone"
+    });
+  }
+
+  // R5-R8: aturan karakteristik palet
+  const brightEvidence =
+    facts.mood === "bright" || facts.palette === "bright";
+
+  const softEvidence =
+    facts.mood === "soft" || facts.palette === "soft";
+
+  const deepEvidence =
+    facts.mood === "deep" || facts.palette === "warm";
+
+  const lightEvidence = facts.palette === "light";
+
+  if (brightEvidence) {
+    firedRules.push({
+      id: "R5", season: "winter", cf: 0.9,
+      evidence: "Bright / high contrast"
+    });
+  }
+
+  if (softEvidence) {
+    firedRules.push({
+      id: "R6", season: "summer", cf: 0.8,
+      evidence: "Soft / muted"
+    });
+  }
+
+  if (deepEvidence) {
+    firedRules.push({
+      id: "R7", season: "autumn", cf: 0.9,
+      evidence: "Deep / rich"
+    });
+  }
+
+  if (lightEvidence) {
+    firedRules.push({
+      id: "R8", season: "spring", cf: 0.8,
+      evidence: "Light / fresh"
+    });
+  }
+
+  // 4. Menggabungkan CF untuk setiap musim
+  // CFcombine = CF1 + CF2 * (1 - CF1)
+  const combinedCF = {
+    spring: 0,
+    summer: 0,
+    autumn: 0,
+    winter: 0
+  };
+
+  const seasonRules = {
+    spring: [],
+    summer: [],
+    autumn: [],
+    winter: []
+  };
+
+  firedRules.forEach(rule => {
+    const previousCF = combinedCF[rule.season];
+
+    combinedCF[rule.season] =
+      previousCF === 0
+        ? rule.cf
+        : previousCF + rule.cf * (1 - previousCF);
+
+    seasonRules[rule.season].push(rule.id);
+  });
+
+  // 5. Menentukan musim dengan CF tertinggi
+  const seasons = ["spring", "summer", "autumn", "winter"];
+
+  const maxCF = Math.max(...Object.values(combinedCF));
+
+  let candidates = seasons.filter(
+    season => Math.abs(combinedCF[season] - maxCF) < 1e-9
+  );
+
+  let season;
+
+  if (maxCF > 0) {
+    // Jika CF sama, utamakan musim dengan lebih banyak aturan aktif.
+    candidates.sort((a, b) =>
+      seasonRules[b].length - seasonRules[a].length
+    );
+
+    season = candidates[0];
+  } else {
+    // Fallback jika tidak ada aturan CF yang aktif.
+    // Hasil fallback bukan hasil perhitungan CF.
+    const fallbackMap = {
+      eye: {
+        warm: "autumn",
+        cool: "winter",
+        neutral: "summer"
+      },
+      hair: {
+        warm: "autumn",
+        cool: "winter",
+        neutral: "summer"
+      },
+      skin: {
+        fair: "spring",
+        medium: "summer",
+        tan: "autumn",
+        deep: "winter",
+        neutral: "summer"
+      }
+    };
+
+    const fallbackResults = [
+      fallbackMap.eye[facts.eye],
+      fallbackMap.hair[facts.hair],
+      fallbackMap.skin[facts.skin]
+    ].filter(Boolean);
+
+    const counts = {
+      spring: 0,
+      summer: 0,
+      autumn: 0,
+      winter: 0
+    };
+
+    fallbackResults.forEach(result => counts[result]++);
+
+    season = seasons.reduce((best, current) =>
+      counts[current] > counts[best] ? current : best
+    , "spring");
+  }
+
+  // 6. Simpan jejak perhitungan untuk pengujian
+  window.lastCFAnalysis = {
+    method: "Forward Chaining + Certainty Factor",
+    facts,
+    undertone,
+    warmVotes,
+    coolVotes,
+    firedRules,
+    seasonRules,
+    combinedCF: { ...combinedCF },
+    result: season,
+    resultCF: combinedCF[season],
+    resultPercent: Math.round(combinedCF[season] * 100),
+    usedFallback: maxCF === 0,
+    note: "Original R1-R8 rule logic and CF weights retained. Natural clues and palette-direction answers determine the seasonal result; wardrobe preferences personalize styling advice."
+  };
+
+  // 7. Tampilkan hasil menggunakan fungsi website yang sudah ada
   displayResult(season);
 }
 
